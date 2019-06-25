@@ -6,8 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/sonivox/Plantillas/Juegos/Juego1/imageloader.h
-
 /home/sonivox/Plantillas/Juegos/Juego1/main.cpp
 stdio.h
 -
@@ -23,6 +21,8 @@ math.h
 -
 time.h
 -
-imageloader.h
-/home/sonivox/Plantillas/Juegos/Juego1/imageloader.h
+SOIL/SOIL.h
+-
+SDL2/SDL.h
+-
 

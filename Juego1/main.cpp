@@ -1,7 +1,3 @@
-/*
-	Copyright 2016 Mohammad Imrul Jubair 
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdlib>
@@ -9,18 +5,24 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <time.h>
-#include "imageloader.h"
+#include <SOIL/SOIL.h>
+#include <SDL2/SDL.h>
+
+/*
+ *       UNIVERSIDAD DE EL SALVADOR
+ *        ALGORITMOS GRAFICOS 2019
+ *
+ *    JUEGO DE CAÑON (TIRO PARABOLICO)
+ *           - ROBERTO HERBERTH MALTEZ GUARDADO - MG16071
+ *           - ROBERTO ANTONIO ORTIZ ACEVEDO    - OA14002
+ *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM140
+ *
+ * */
+
 
 using namespace std;
 
-/*
-COPYRIGHT : Mohammad Imrul Jubair.
-Please provide reference to reuse this code.
-*/
-
 //////////////////// initializations //////////////////////////
-
-void sky();
 void theGun();
 void theSurface();
 void theBullet();
@@ -37,14 +39,11 @@ void enemy();
 
 float random_float(const float, const float);
 
-GLuint _textureId1;
-GLuint _textureId2;
-GLuint _textureId3;
-GLuint _textureId4;
-GLuint _textureId5;
-GLuint _textureId6;
-GLuint _textureId7;
-GLuint _textureId8;
+GLuint texture[0];
+GLuint cannon[0];
+GLuint rules[0];
+GLuint  enemigo[0];
+GLuint fuego[0];
 
 float THETA = 3.1416 / 180.0;
 bool freeze = false;
@@ -65,6 +64,17 @@ float b = 0.0;
 
 float timer = 0.0;
 
+// funcion para cargar audio
+void my_audio_callback(void *userdata, Uint8 *stream, int len);
+
+#define RUTA_AUDIO "Humans Are Such Easy Prey.wav" //nombre del archivo de audio
+
+// variables para audio
+static Uint8 *audio_pos; // global pointer to the audio buffer to be played
+static Uint32 audio_len; // remaining length of the sample we have to play
+
+
+
 /////////////////////// functions /////////////////////////
 
 void Draw() {
@@ -74,6 +84,8 @@ void Draw() {
 
 
     glMatrixMode(GL_MODELVIEW);
+
+    SDL_PauseAudio(false); //reproducir el audiow
 
     glLoadIdentity();
 
@@ -128,40 +140,28 @@ void Draw() {
     glutSwapBuffers();
 }
 
-void sky()
-{
-    glBindTexture(GL_TEXTURE_2D, _textureId4);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+void castle(){
+    texture[1] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "castle.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
 
     glEnable(GL_TEXTURE_2D);
-
-    glColor3f(1, 1, 1);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0);glVertex3f(2.0, -0.55, 0.0);
-    glTexCoord2f(1, 0);glVertex3f(14, -0.55, 0.0);
-    glTexCoord2f(1, 1);glVertex3f(14, 5.0, 0.0);
-    glTexCoord2f(0, 1);glVertex3f(2.0, 5.0, 0.0);
-    glEnd();
-
-    glDisable(GL_TEXTURE_2D);
-
-
-}
-
-void castle()
-{
-
-    glBindTexture(GL_TEXTURE_2D, _textureId2);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
     glEnable(GL_TEXTURE_2D);
 
     glBegin(GL_QUADS);
     glColor3f(1,1,1);
-
     glTexCoord2f(0,0);glVertex3f(-2.8, -0.45, 0.0);
     glTexCoord2f(1, 0);glVertex3f( 0.6, -0.45, 0.0);
     glTexCoord2f(1, 1);glVertex3f( 0.6, 4.0, 0.0);
@@ -171,9 +171,20 @@ void castle()
     glDisable(GL_TEXTURE_2D);
 }
 
-void theGun()
-{
-    glBindTexture(GL_TEXTURE_2D, _textureId3);
+void theGun(){
+    cannon[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "cannon.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, cannon[0]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -194,19 +205,32 @@ void theGun()
 
     glPushMatrix();
     glTranslatef(0.0,0.0,-0.25);
-    if (freeze == true && timer >= 0.5 && timer <= 2.8)
+    if (freeze == true && timer >= 0.5 && timer <= 2.8) {
         fire();
+    }
 
     glPopMatrix();
 }
 
-void enemy()
-{
+void enemy(){
     glColor3f(1, 1, 1);
 
-    glBindTexture(GL_TEXTURE_2D, _textureId8);
+    enemigo[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "enemy.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, enemigo[0]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
     glEnable(GL_TEXTURE_2D);
 
@@ -221,11 +245,23 @@ void enemy()
     glDisable(GL_TEXTURE_2D);
 }
 
-void fire()
-{
+void fire(){
+
     glColor3f(1.0, 1.0, 1.0);
 
-    glBindTexture(GL_TEXTURE_2D, _textureId6);
+    fuego[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "fire.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, fuego[0]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -242,16 +278,13 @@ void fire()
 
 }
 
-void explosion()
-{
-
+void explosion(){
     glColor3f(0.2, 0.0, 0.0);
     glLineWidth(1);
     glPushMatrix();
     glTranslatef(collideX, -0.5, -1.0);
 
     for (float i = 0; i <= 9; i=i+1) {
-
         glBegin(GL_LINES);
         glVertex3f( -0.5, 0, 0.0);
         glVertex3f( -0.3, 0, 0.0);
@@ -265,9 +298,20 @@ void explosion()
     glPopMatrix();
 }
 
-void fence()
-{
-    glBindTexture(GL_TEXTURE_2D, _textureId7);
+void fence(){
+    texture[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "fence2.jpeg",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -288,32 +332,42 @@ void fence()
 
 }
 
-void theSurface()
-{
+void theSurface(){
 
     glColor3f(0.0, 0.0, 0.0);
 
-    glBindTexture(GL_TEXTURE_2D, _textureId1);
+    texture[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "softground.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glEnable(GL_TEXTURE_2D);
 
     glBegin(GL_QUADS);
-
     glNormal3f(0.0f, 0.0f, 1.0f);
     glColor3f(1.0, 1.0, 1.0);
-
     glTexCoord2f(0, 1);glVertex3f(-5.0, -0.4, 0.0);
     glTexCoord2f(4, 1);glVertex3f(15.0, -0.4, 0.0);
     glTexCoord2f(4, 0);glVertex3f(15.0, -5.0, 0.0);
-
     glTexCoord2f(0, 0);glVertex3f(-5.0, -5.0, 0.0);
     glEnd();
+
     glDisable(GL_TEXTURE_2D);
 
-    if (collide == true)
+    if (collide == true) {
         explosion();
+    }
 
 
     //srand((unsigned)time(0));
@@ -328,17 +382,13 @@ void theSurface()
 
 }
 
-void theBullet()
-{
+void theBullet(){
     glColor3f(0.2, 0.1, 0.1);
     glTranslatef(xVal, yVal+0.5, -0.2);
     glutSolidSphere(0.2, 15.0, 2.0);
-
-
 }
 
-void powerBar()
-{
+void powerBar(){
 
     glLineWidth(2);
     glBegin(GL_LINE_LOOP);
@@ -368,7 +418,19 @@ void rulesBoard()
 {
     glColor3f(1, 1, 1);
 
-    glBindTexture(GL_TEXTURE_2D, _textureId5);
+    rules[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "rules.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, rules[0]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -453,70 +515,15 @@ void update(int value)
     glutPostRedisplay();
 }
 
-void theCalculate()
-{
+void theCalculate(){
     a = tan(_angle*(THETA));
     b = gVal / (2 * vNot*vNot*cos(_angle*THETA)*cos(_angle*THETA));
-}
-
-GLuint loadTexture(Image* image) {
-    GLuint textureId;
-    glGenTextures(1, &textureId); //Make room for our texture
-    glBindTexture(GL_TEXTURE_2D, textureId); //Tell OpenGL which texture to edit
-    //Map the image to the texture
-    glTexImage2D(GL_TEXTURE_2D,                //Always GL_TEXTURE_2D
-                 0,                            //0 for now
-                 GL_RGB,                       //Format OpenGL uses for image
-                 image->width, image->height,  //Width and height
-                 0,                            //The border of the image
-                 GL_RGB, //GL_RGB, because pixels are stored in RGB format
-                 GL_UNSIGNED_BYTE, //GL_UNSIGNED_BYTE, because pixels are stored
-            //as unsigned numbers
-                 image->pixels);               //The actual pixel data
-    return textureId; //Returns the id of the texture
-}
-
-void textureSetting(){
-
-    Image* image1 = loadBMP("./images/softground.bmp");
-    Image* image2 = loadBMP("./images/castle.bmp");
-    Image* image3 = loadBMP("./images/cannon.bmp");
-    Image* image4 = loadBMP("./images/jungle3.bmp");
-    Image* image5 = loadBMP("./images/rules.bmp");
-    Image* image6 = loadBMP("./images/fire.bmp");
-    Image* image7 = loadBMP("./images/fence3.bmp");
-    Image* image8 = loadBMP("./images/spy_white.bmp");
-
-
-
-    _textureId1 = loadTexture(image1);
-    _textureId2 = loadTexture(image2);
-    _textureId3 = loadTexture(image3);
-    _textureId4 = loadTexture(image4);
-    _textureId5 = loadTexture(image5);
-    _textureId6 = loadTexture(image6);
-    _textureId7 = loadTexture(image7);
-    _textureId8 = loadTexture(image8);
-
-
-    delete image1;
-    delete image2;
-    delete image3;
-    delete image4;
-    delete image5;
-    delete image6;
-    delete image7;
-    delete image8;
-
-
-
 }
 
 void Initialize() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, 2.00, 1.0, 200.0);
-
 }
 
 float random_float(const float min, const float max)
@@ -533,15 +540,62 @@ int main(int iArgc, char** cppArgv) {
 
     glutInit(&iArgc, cppArgv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(600, 300);
+    glutInitWindowSize(900, 600);
     glutInitWindowPosition(70, 111);
-    glutCreateWindow("physics");
+    glutCreateWindow("JUEGO DEL CAÑON (TIRO PARABOLICO)");
     Initialize();
-    textureSetting();
+
+    // sonido
+    // Inicializar SDL.
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+        return 1;
+
+    // Variables locales
+    static Uint32 wav_length; // Longitud de nuestra muestra
+    static Uint8 *wav_buffer; // Buffer que contiene nuestro archivo de audio
+    static SDL_AudioSpec wav_spec; // Las especificaciones de nuestra pieza de música
+
+    /* Cargar el WAV */
+    // Las especificaciones, la longitud y el búfer de nuestro wav se llenan
+    if( SDL_LoadWAV(RUTA_AUDIO, &wav_spec, &wav_buffer, &wav_length) == NULL )
+    {
+        return 1;
+    }
+    // Establecer la función de devolución de llamada
+    wav_spec.callback = my_audio_callback;
+    wav_spec.userdata = NULL;
+
+    // Establecer nuestras variables estáticas globales
+    audio_pos = wav_buffer; // Copia el buffer de sonido
+    audio_len = wav_length; // Copia la longitud del archivo
+
+    /*Abrir el dispositivo de audio */
+    if ( SDL_OpenAudio(&wav_spec, NULL) < 0 )
+    {
+        fprintf(stderr, "No se pudo abrir el audio: %s\n", SDL_GetError());
+        exit(-1);
+    }
+
+
     glutDisplayFunc(Draw);
     glutKeyboardFunc(handleKeypress);
 
     glutMainLoop();
 
     return 0;
+}
+
+void my_audio_callback(void *userdata, Uint8 *stream, int len)
+{
+
+    if (audio_len ==0)
+        return;
+
+    len = ( len > audio_len ? audio_len : len );
+
+    SDL_memcpy (stream, audio_pos, len); // Simplemente copie desde un buffer en el otro
+    //SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME / 2); // Mezclar de un buffer a otro
+
+    audio_pos += len;
+    audio_len -= len;
 }
