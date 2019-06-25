@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sonivox/Plantillas/Juegos/Juego1/imageloader.h
+
+/home/sonivox/Plantillas/Juegos/Juego1/main.cpp
+stdio.h
+-
+stdlib.h
+-
+cstdlib
+-
+ctime
+-
+GL/glut.h
+-
+math.h
+-
+time.h
+-
+imageloader.h
+/home/sonivox/Plantillas/Juegos/Juego1/imageloader.h
+
