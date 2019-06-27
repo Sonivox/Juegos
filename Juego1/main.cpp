@@ -7,6 +7,7 @@
 #include <time.h>
 #include <SOIL/SOIL.h>
 #include <SDL2/SDL.h>
+#include <string>
 
 /*
  *       UNIVERSIDAD DE EL SALVADOR
@@ -15,7 +16,8 @@
  *    JUEGO DE CAÑON (TIRO PARABOLICO)
  *           - ROBERTO HERBERTH MALTEZ GUARDADO - MG16071
  *           - ROBERTO ANTONIO ORTIZ ACEVEDO    - OA14002
- *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM140
+ *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM160
+ *           - FERNANDO ROMAN VENTURA ALVARADO  - VA16001
  *
  * */
 
@@ -77,6 +79,15 @@ static Uint32 audio_len; // remaining length of the sample we have to play
 
 /////////////////////// functions /////////////////////////
 
+static char label[100];
+
+void dibujarCadena(char *s) {
+    unsigned int i;
+    for (i = 0; i < strlen(s); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+    }
+}
+
 void Draw() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -85,7 +96,8 @@ void Draw() {
 
     glMatrixMode(GL_MODELVIEW);
 
-    SDL_PauseAudio(false); //reproducir el audiow
+
+    //SDL_PauseAudio(false); //reproducir el audiow
 
     glLoadIdentity();
 
@@ -141,6 +153,7 @@ void Draw() {
 }
 
 void castle(){
+
     texture[1] = SOIL_load_OGL_texture // cargamos la imagen
             (
                     "castle.bmp",
@@ -301,7 +314,7 @@ void explosion(){
 void fence(){
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "fence2.jpeg",
+                    "fence2.bmp",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
