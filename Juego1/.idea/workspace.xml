@@ -12,13 +12,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a1035250-4ccd-408f-98b2-aa15562fbae2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Juego1.dir/main.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/fence2.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Juego2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Juego3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/Juego3" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/Juego3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Juego3/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -46,8 +46,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="81" selection-start-line="81" selection-end-line="88" selection-end-column="1" />
+            <state relative-caret-position="152">
+              <caret line="408" column="12" selection-start-line="408" selection-start-column="12" selection-end-line="408" selection-end-column="12" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -98,7 +98,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/CLionProjects/practicaCrearTexto" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -138,17 +138,19 @@
       <workItem from="1561483923437" duration="2305000" />
       <workItem from="1561491016578" duration="2938000" />
       <workItem from="1561574421493" duration="3131000" />
+      <workItem from="1561695371967" duration="660000" />
+      <workItem from="1561701167023" duration="23000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13749000" />
+    <option name="totallyTimeSpent" value="14432000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="732" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22913617" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23636363" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -185,8 +187,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="81" selection-start-line="81" selection-end-line="88" selection-end-column="1" />
+        <state relative-caret-position="152">
+          <caret line="408" column="12" selection-start-line="408" selection-start-column="12" selection-end-line="408" selection-end-column="12" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

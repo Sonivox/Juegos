@@ -74,7 +74,7 @@ void suelo();
 void puerta();
 void paredes();
 void ariete();
-
+void barra();
 
 
 GLint pared[0];
@@ -82,6 +82,7 @@ GLuint sueloT[0];
 GLuint puertaT[0];
 
 GLuint textura[0];
+
 
 //para LSD
 
@@ -119,7 +120,7 @@ int main(int argc, char *argv[]) {
 
 int score = 0;
 
-void text(double a){
+void Score(double a){
     char text[255];
     //sprintf(text, "X:%.0f Y:%.0f", xrot, yrot);
     sprintf(text, "SCORE = %.0f", a);
@@ -130,54 +131,42 @@ void text(double a){
     }
 }
 
-// all drawings here
-void display() {
-
-    translateRotate(); // put this function before each drawing you make.
-    xyz();
-    text(score);
-    SDL_PauseAudio(false); //reproducir el audio
-    translateRotate(); // put this function before each drawing you make.
-
-
-    glColor3f(1,1,1);
-
-    //escenario
-    suelo();
-    paredes();
-    puerta();
-
-    //objetos con animacion
-    ariete();
-}
-
-void suelo(){
-    sueloT[2] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "tierra.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, sueloT[2]);
-    //parametros
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(10,0); glVertex3f(100.0, -100.0, 0.0);
-    glTexCoord2f(10,10); glVertex3f(-100.0, -100.0, 0.0);
-    glTexCoord2f(0,10); glVertex3f(-100.0, 100.0, 0.0);
-    glTexCoord2f(0,0); glVertex3f(100.0, 100.0, 0.0);
-    glEnd();
-}
-
+//ariete
 bool golpe = false;
 float distancia = 0;
 
+//barra de poder
+int poder = -160;
+bool  presionado = true;
+
+void barra(){
+
+    //area de la cancha
+    glBegin(GL_LINE_STRIP);
+    glVertex2d(0.0,-130.0);
+    glVertex2d(0.0,-190.0);
+    glVertex2d(-180.0,-190.0);
+    glVertex2d(-180.0,-130.0);
+    glVertex2d(0.0,-130.0);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glVertex2d(-10.0 + poder,-140.0);
+    glVertex2d(-10.0 + poder,-180.0);
+    glVertex2d(-170.0,-180.0);
+    glVertex2d(-170.0,-140.0);
+    glEnd();
+
+    if(poder == 0){
+        poder = -160;
+    }
+
+    if(presionado == true){
+        poder += 10;
+        //presionado = false;
+    }
+
+}
 void ariete(){
     textura[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
@@ -219,15 +208,60 @@ void ariete(){
             cout << "falso \n" ;
             distancia = 0;
             score++;
+
         }
 
         glTranslatef(-distancia, 0 , 0);
         glutSolidSphere(r,h,h);
         cout << "verdadero \n dis " << distancia << endl;
     }
-
 }
 
+
+
+
+// all drawings here
+void display() {
+    translateRotate(); // put this function before each drawing you make.
+    xyz();
+    Score(score);
+    barra();
+    SDL_PauseAudio(false); //reproducir el audio
+    translateRotate(); // put this function before each drawing you make.
+
+    //escenario
+    suelo();
+    paredes();
+    puerta();
+
+
+    //objetos con animacion
+    ariete();
+}
+
+void suelo(){
+    sueloT[2] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "tierra.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, sueloT[2]);
+    //parametros
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(10,0); glVertex3f(100.0, -100.0, 0.0);
+    glTexCoord2f(10,10); glVertex3f(-100.0, -100.0, 0.0);
+    glTexCoord2f(0,10); glVertex3f(-100.0, 100.0, 0.0);
+    glTexCoord2f(0,0); glVertex3f(100.0, 100.0, 0.0);
+    glEnd();
+}
 
 void puerta(){
     puertaT[1] = SOIL_load_OGL_texture // cargamos la imagen
@@ -536,9 +570,6 @@ void ResizeFunction(int Width, int Height) {
     glOrtho(-ortho, ortho, -ortho, ortho, -ortho, ortho);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    /*gluLookAt(rotLx, rotLy, rotLz + 15.0,
-            0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0);*/
 }
 
 void RenderFunction() {
@@ -592,16 +623,16 @@ void keyboard(unsigned char key, int x, int y) {
         // I-J-K-L-U-O for 90 degrees rotation
         case 'j': // Rotates on x axis by -90 degree
         case 'J':
-            golpe = true;
+            presionado = false;
             break;
         case 'l': // Rotates on x axis by 90 degree
         case 'L':
-            rotX += 90.0f;
+            //rotX += 90.0f;
             break;
 
         case 'k': // Rotates on y axis by -90 degree
         case 'K':
-            rotY -= 90.0f;
+            //rotY -= 90.0f;x
             break;
         case 'i': // Rotates on y axis by 90 degree
         case 'I':
