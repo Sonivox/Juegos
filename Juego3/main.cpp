@@ -131,6 +131,17 @@ void Score(double a){
     }
 }
 
+void num(double a){
+    char text[255];
+    //sprintf(text, "X:%.0f Y:%.0f", xrot, yrot);
+    sprintf(text, "VELOCIDAD = %.0f", a);
+    glColor3f(1, 1, 1);
+    glRasterPos3f(120 , 125, 100);
+    for(int i = 0; text[i] != '\0'; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+    }
+}
+
 //ariete
 bool golpe = false;
 float distancia = 0;
@@ -138,6 +149,8 @@ float distancia = 0;
 //barra de poder
 int poder = -160;
 bool  presionado = true;
+int contador = 0;
+float velocidad = 0.0;
 
 void barra(){
 
@@ -159,11 +172,46 @@ void barra(){
 
     if(poder == 0){
         poder = -160;
+        contador = 0;
     }
 
     if(presionado == true){
         poder += 10;
+        contador++;
         //presionado = false;
+    }
+
+    switch(contador){
+        case 7:
+            velocidad = 5;
+            break;
+        case 8:
+            velocidad = 6;
+            break;
+        case 9:
+            velocidad = 6;
+            break;
+        case 10:
+            velocidad = 7;
+            break;
+        case 11:
+            velocidad = 7.5;
+            break;
+        case 12:
+            velocidad = 7.5;
+            break;
+        case 13:
+            velocidad = 9;
+            break;
+        case 14:
+            velocidad = 9;
+            break;
+        case 15:
+            velocidad = 10;
+            break;
+        default:
+            velocidad = 0;
+            break;
     }
 
 }
@@ -196,25 +244,35 @@ void ariete(){
     GLfloat h = 120;
 
     // cylinder that is to be textured…
-    glTranslatef(100,0,70);
+    glTranslatef(150,0,70);
     glutSolidSphere(r,h,h);
 
+    if(presionado == false && velocidad >= 6){
+        golpe = true;
+    }
 
-    if(golpe == true){
-        distancia++;
+    if (golpe == true) {
 
-        if(distancia == 100){
-            golpe = false;
-            cout << "falso \n" ;
+        distancia += velocidad;
+
+        if (distancia == 150 || distancia == 152 || distancia == 153 || distancia == 154) {
             distancia = 0;
+            golpe = false;
             score++;
-
+            presionado = true;
+            velocidad = 0;
         }
 
-        glTranslatef(-distancia, 0 , 0);
-        glutSolidSphere(r,h,h);
+        glTranslatef(-distancia, 0, 0);
+        glutSolidSphere(r, h, h);
         cout << "verdadero \n dis " << distancia << endl;
     }
+
+    //animacion al llegar a 15 puntos
+    if(score == 15){
+
+    }
+
 }
 
 
@@ -404,8 +462,8 @@ void xyz() {
 
     // glRotatef and glTranslatef
 
-    cout << "rot(" << rotX << ", " << rotY << ", " << rotZ << ")" << endl;
-    cout << "trans(" << X << ", " << Y << ", " << Z << ")" << endl;
+    //cout << "rot(" << rotX << ", " << rotY << ", " << rotZ << ")" << endl;
+    //cout << "trans(" << X << ", " << Y << ", " << Z << ")" << endl;
 
     // up or down or zoom in zoom out
     // Draw the positive side of the lines x,y,z
@@ -627,6 +685,7 @@ void keyboard(unsigned char key, int x, int y) {
             break;
         case 'l': // Rotates on x axis by 90 degree
         case 'L':
+            presionado = true;
             //rotX += 90.0f;
             break;
 
