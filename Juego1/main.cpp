@@ -25,18 +25,18 @@
 using namespace std;
 
 //////////////////// Prototipos de función //////////////////////////
-void theGun();
-void theSurface();
-void theBullet();
-void theCalculate();
+void arma();
+void superficie();
+void proyectil();
+void fisicas();
 void update(int value);
-void castle();
-void powerBar();
-void rulesBoard();
-void fire();
+void castillo();
+void barraPoder();
+void reglas();
+void fuegoFunction();
 void explosion();
-void fence();
-void enemy();
+void paredon();
+void enemigoFunction();
 
 // segunda ventana
 void pintarsubventana();
@@ -113,13 +113,13 @@ void display() {
     // Push and pop
     glPushMatrix();
     glTranslatef(-5.0, -1.0, -10.0);
-    castle();
+    castillo();
 
 
     glPushMatrix();
     glTranslatef(0.0, 0.5, 0.0);
     glRotatef(_angle, 0.0, 0.0, 1.0);
-    theGun();
+    arma();
 
     glPopMatrix();
 
@@ -127,11 +127,11 @@ void display() {
     glPushMatrix();
 
     glTranslatef(0, 0.1, 0.5);
-    theSurface();
-    powerBar();
-    fence();
+    superficie();
+    barraPoder();
+    paredon();
     glTranslatef(-1.0, 0.8, 0);
-    //rulesBoard();
+    //reglas();
 
     glPopMatrix();
 
@@ -146,7 +146,7 @@ void display() {
 
     glPushMatrix();
 
-    theBullet();
+    proyectil();
 
     glPopMatrix();
 
@@ -158,7 +158,7 @@ void display() {
     glutSwapBuffers();
 }
 
-void castle(){
+void castillo(){
 
     texture[1] = SOIL_load_OGL_texture // cargamos la imagen
             (
@@ -196,7 +196,7 @@ void castle(){
     glDisable(GL_BLEND); // desactivar transparencia
 }
 
-void theGun(){
+void arma(){
     cannon[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
                     "cannon.png",
@@ -236,13 +236,13 @@ void theGun(){
     glPushMatrix();
     glTranslatef(0.0,0.0,-0.25);
     if (freeze == true && timer >= 0.5 && timer <= 2.8) {
-        fire();
+        fuegoFunction();
     }
 
     glPopMatrix();
 }
 
-void enemy(){
+void enemigoFunction(){
     glColor3f(1, 1, 1);
 
     enemigo[0] = SOIL_load_OGL_texture // cargamos la imagen
@@ -281,7 +281,7 @@ void enemy(){
     glDisable(GL_BLEND); // desactivar transparencia
 }
 
-void fire(){
+void fuegoFunction(){
 
     glColor3f(1.0, 1.0, 1.0);
 
@@ -339,10 +339,10 @@ void explosion(){
     glPopMatrix();
 }
 
-void fence(){
+void paredon(){
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "pared-enemigo.png",
+                    "cobblestone.bmp",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
@@ -369,8 +369,8 @@ void fence(){
 
     glTexCoord2f(0, 0);glVertex3f(5.0, -1.0, 0.0);
     glTexCoord2f(9, 0);glVertex3f(12.5, -1.0, 0.0);
-    glTexCoord2f(9, 1);glVertex3f(12.5, 0.2, 0.0);
-    glTexCoord2f(0, 1);glVertex3f(5.0, 0.2, 0.0);
+    glTexCoord2f(9, 2);glVertex3f(12.5, 0.2, 0.0);
+    glTexCoord2f(0, 2);glVertex3f(5.0, 0.2, 0.0);
 
     glEnd();
 
@@ -379,13 +379,13 @@ void fence(){
 
 }
 
-void theSurface(){
+void superficie(){
 
     glColor3f(0.0, 0.0, 0.0);
 
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "suelo.jpg",
+                    "suelo.bmp",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
@@ -409,9 +409,9 @@ void theSurface(){
     glBegin(GL_QUADS);
     glNormal3f(0.0f, 0.0f, 1.0f);
     glColor3f(1.0, 1.0, 1.0);
-    glTexCoord2f(0, 1);glVertex3f(-5.0, -0.4, 0.0);
-    glTexCoord2f(4, 1);glVertex3f(15.0, -0.4, 0.0);
-    glTexCoord2f(4, 0);glVertex3f(15.0, -5.0, 0.0);
+    glTexCoord2f(0, 10);glVertex3f(-5.0, -0.4, 0.0);
+    glTexCoord2f(20, 10);glVertex3f(15.0, -0.4, 0.0);
+    glTexCoord2f(20, 0);glVertex3f(15.0, -5.0, 0.0);
     glTexCoord2f(0, 0);glVertex3f(-5.0, -5.0, 0.0);
     glEnd();
 
@@ -430,18 +430,18 @@ void theSurface(){
 
     glTranslatef(enemyX, -0.55, -1.0);
     glScalef(1.2,1.2,0.0);
-    enemy();
+    enemigoFunction();
     glPopMatrix();
 
 }
 
-void theBullet(){
+void proyectil(){
     glColor3f(0.2, 0.1, 0.1);
     glTranslatef(xVal, yVal+0.5, -0.2);
     glutSolidSphere(0.2, 15.0, 2.0);
 }
 
-void powerBar(){
+void barraPoder(){
 
     glLineWidth(2);
     glBegin(GL_LINE_LOOP);
@@ -468,7 +468,7 @@ void powerBar(){
 }
 
 
-void handleKeypress(unsigned char key, int x, int y) {
+void keyboard(unsigned char key, int x, int y) {
     if (freeze == false) {
         switch (key) {
             case 'w':
@@ -483,25 +483,25 @@ void handleKeypress(unsigned char key, int x, int y) {
                     glutPostRedisplay();
                 }
                 break;
-            case 'e':
+            case '+':
                 if (vNot <= 12){
                     vNot += 0.1;
                     glutPostRedisplay();
                 }
                 break;
-            case 'd':
+            case '-':
                 if (vNot >= 6.0) {
                     vNot -= 0.1;
                     glutPostRedisplay();
                 }
                 break;
-            case 'a':
+            case ' ':
                 update(0);
 
                 break;
         }
 
-        theCalculate();
+        fisicas();
     }
 }
 
@@ -536,13 +536,13 @@ void update(int value)
     glutPostRedisplay();
 }
 
-void theCalculate(){
+void fisicas(){
     a = tan(_angle*(THETA));
     b = gVal / (2 * vNot*vNot*cos(_angle*THETA)*cos(_angle*THETA));
 }
 
 void Initialize() {
-    glClearColor(0.6, 1.0, 1.0, 1.0);
+    glClearColor(0.046f, 0.714f, 0.945f, 0.5f);
 
     glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, 2.00, 1.0, 200.0);
@@ -600,7 +600,7 @@ int main(int iArgc, char** cppArgv) {
 
 
     glutDisplayFunc(display);
-    glutKeyboardFunc(handleKeypress);
+    glutKeyboardFunc(keyboard);
     glutIdleFunc(idle);
     IdSub = glutCreateSubWindow(IdMain, 20, 20, 600 - 10, 600 / 10);
     glutDisplayFunc(pintarsubventana);
@@ -644,7 +644,7 @@ void pintarsubventana() {
 
 
     dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
-                  "A = disparar; W = arriba; S = abajo; E = poder +; D = poder -", 0.0, 0.70);
+                  "Space = Disparar; W/S = Direccion; +/- = Potencia", 0.0, 0.70);
 
     glutSwapBuffers();
 }
