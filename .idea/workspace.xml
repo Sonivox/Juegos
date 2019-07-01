@@ -11,6 +11,32 @@
   <component name="ChangeListManager">
     <list default="true" id="e1ba7640-59e8-4759-90a7-a581a930e306" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/feature_tests.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/Juego1" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/Juego1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/Juego1.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/Juego1.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Juego1/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,10 +54,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="419" />
-    <option name="y" value="230" />
-    <option name="width" value="894" />
-    <option name="height" value="486" />
+    <option name="x" value="70" />
+    <option name="y" value="20" />
+    <option name="width" value="1198" />
+    <option name="height" value="678" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -60,6 +86,12 @@
               <item name="Juegos" type="462c0819:PsiDirectoryNode" />
               <item name="Juego3" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Juegos" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Juegos" type="462c0819:PsiDirectoryNode" />
+              <item name="Juego3" type="462c0819:PsiDirectoryNode" />
+              <item name="cmake-build-debug" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -70,7 +102,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Juego1" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
@@ -102,6 +134,8 @@
       <workItem from="1561607240704" duration="152000" />
       <workItem from="1561702374746" duration="100000" />
       <workItem from="1561760019046" duration="86000" />
+      <workItem from="1561930395365" duration="2501000" />
+      <workItem from="1561948738342" duration="236000" />
     </task>
     <task id="LOCAL-00001" summary="Juego 1 casi listo">
       <created>1561500284361</created>
@@ -128,12 +162,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="873000" />
+    <option name="totallyTimeSpent" value="3610000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1366" height="732" extended-state="6" />
+    <frame x="70" y="27" width="1296" height="741" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27045456" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -145,7 +180,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3289256" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />

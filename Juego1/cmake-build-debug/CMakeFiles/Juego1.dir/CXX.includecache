@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/sonivox/Plantillas/Juegos/Juego1/main.cpp
+/home/striker/CLionProjects/Juegos/Juego1/main.cpp
 stdio.h
 -
 stdlib.h

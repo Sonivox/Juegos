@@ -24,7 +24,7 @@
 
 using namespace std;
 
-//////////////////// initializations //////////////////////////
+//////////////////// Prototipos de función //////////////////////////
 void theGun();
 void theSurface();
 void theBullet();
@@ -37,6 +37,15 @@ void fire();
 void explosion();
 void fence();
 void enemy();
+
+// segunda ventana
+void pintarsubventana();
+
+void tamanosubventana(int w, int h);
+
+void idle(void);
+
+void dibujarCadena(char *s, double color[3], string texto, double posX, double posY);
 
 
 float random_float(const float, const float);
@@ -66,6 +75,9 @@ float b = 0.0;
 
 float timer = 0.0;
 
+int IdMain;
+int IdSub;
+
 // funcion para cargar audio
 void my_audio_callback(void *userdata, Uint8 *stream, int len);
 
@@ -81,14 +93,24 @@ static Uint32 audio_len; // remaining length of the sample we have to play
 
 static char label[100];
 
-void dibujarCadena(char *s) {
+void dibujarCadena(char *s, double color[3], string texto, double posX, double posY) {
+    // Color del texto
+    glColor3f(color[0], color[1], color[2]);
+
+    // cadena formateada
+    sprintf(label, texto.c_str());
+
+    // posición del texto
+    glRasterPos2f(posX, posY);
+
+    // recorrido letra a letra para dibujar la cadena
     unsigned int i;
     for (i = 0; i < strlen(s); i++) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
     }
 }
 
-void Draw() {
+void display() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -99,18 +121,17 @@ void Draw() {
 
     //SDL_PauseAudio(false); //reproducir el audiow
 
-    glLoadIdentity();
+    glLoadIdentity(); // se carga la matrix de identidad
 
 
 
+    // Push and pop
     glPushMatrix();
-
     glTranslatef(-5.0, -1.0, -10.0);
     castle();
 
 
     glPushMatrix();
-
     glTranslatef(0.0, 0.5, 0.0);
     glRotatef(_angle, 0.0, 0.0, 1.0);
     theGun();
@@ -125,7 +146,7 @@ void Draw() {
     powerBar();
     fence();
     glTranslatef(-1.0, 0.8, 0);
-    rulesBoard();
+    //rulesBoard();
 
     glPopMatrix();
 
@@ -133,7 +154,7 @@ void Draw() {
     glPushMatrix();
 
     glTranslatef(0, 0, -0.5);
-    //sky();
+
 
     glPopMatrix();
 
@@ -535,6 +556,7 @@ void theCalculate(){
 
 void Initialize() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
+
     glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, 2.00, 1.0, 200.0);
 }
@@ -551,11 +573,31 @@ float random_float(const float min, const float max)
 
 int main(int iArgc, char** cppArgv) {
 
+
+    /*int main (int argc, char **argv)
+{
+    glutInit (&argc, argv);
+    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutInitWindowPosition (20, 20);
+    glutInitWindowSize (600, 600);
+    IdMain = glutCreateWindow ("Ventana con Textos");
+    glutDisplayFunc (pintarventana);
+    glutReshapeFunc (tamanoventana);
+    glutKeyboardFunc (teclado);
+    glutIdleFunc (idle);
+    IdSub = glutCreateSubWindow (IdMain, 20, 20, 600 - 10, 600 / 10);
+    glutDisplayFunc (pintarsubventana);
+    glutReshapeFunc (tamanosubventana);
+    glutMainLoop ();
+    return 0;
+}*/
+
+
     glutInit(&iArgc, cppArgv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(900, 600);
     glutInitWindowPosition(70, 111);
-    glutCreateWindow("JUEGO DEL CAÑON (TIRO PARABOLICO)");
+    IdMain = glutCreateWindow("JUEGO DEL CAÑON (TIRO PARABOLICO)");
     Initialize();
 
     // sonido
@@ -590,8 +632,12 @@ int main(int iArgc, char** cppArgv) {
     }
 
 
-    glutDisplayFunc(Draw);
+    glutDisplayFunc(display);
     glutKeyboardFunc(handleKeypress);
+    glutIdleFunc(idle);
+    IdSub = glutCreateSubWindow(IdMain, 20, 20, 600 - 10, 600 / 10);
+    glutDisplayFunc(pintarsubventana);
+    glutReshapeFunc(tamanosubventana);
 
     glutMainLoop();
 
@@ -612,3 +658,42 @@ void my_audio_callback(void *userdata, Uint8 *stream, int len)
     audio_pos += len;
     audio_len -= len;
 }
+
+
+void pintarsubventana() {
+    glutSetWindow(IdSub);
+    glClearColor(0.7, 0.7, 0.7, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glColor3f(0.0F, 0.0F, 0.0F);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(0.0F, 0.0F);
+    glVertex2f(0.0F, 0.99F);
+    glVertex2f(0.999F, 0.99F);
+    glVertex2f(0.999F, 0.0F);
+    glEnd();
+
+
+    glRasterPos2f(0.40F, 0.70F);
+    dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F}, "Texto de prubea", 0.40, 0.70);
+    /*sprintf (label, " de OpenGL creada con GLUT ");
+    glRasterPos2f (0.33F, 0.35F);
+    dibujarCadena (label);*/
+    glutSwapBuffers();
+}
+
+void tamanosubventana(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0F, 1.0F, 0.0F, 1.0F);
+}
+
+void idle(void) {
+
+    glutSetWindow(IdMain);
+    glutPostRedisplay();
+    glutSetWindow(IdSub);
+    glutPostRedisplay();
+}
+
+
