@@ -162,13 +162,18 @@ void castle(){
 
     texture[1] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "castle.bmp",
+                    "castillo.png",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
             );
 
     glEnable(GL_TEXTURE_2D);
+
+    // activar transparencia
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glBindTexture(GL_TEXTURE_2D, texture[1]);
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -188,18 +193,23 @@ void castle(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND); // desactivar transparencia
 }
 
 void theGun(){
     cannon[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "cannon.bmp",
+                    "cannon.png",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
             );
 
     glEnable(GL_TEXTURE_2D);
+
+    // activar transparencia
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindTexture(GL_TEXTURE_2D, cannon[0]);
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -220,6 +230,7 @@ void theGun(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND); // desactivar transparencia
 
 
     glPushMatrix();
@@ -236,13 +247,18 @@ void enemy(){
 
     enemigo[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "enemy.bmp",
+                    "enemigo.png",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
             );
 
     glEnable(GL_TEXTURE_2D);
+
+    // activar transparencia
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glBindTexture(GL_TEXTURE_2D, enemigo[0]);
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -262,6 +278,7 @@ void enemy(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND); // desactivar transparencia
 }
 
 void fire(){
@@ -270,7 +287,7 @@ void fire(){
 
     fuego[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "fire.bmp",
+                    "fuego.png",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
@@ -278,6 +295,11 @@ void fire(){
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, fuego[0]);
+
+    // activar transparencia
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -294,7 +316,7 @@ void fire(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
-
+    glDisable(GL_BLEND); // desactivar transparencia
 }
 
 void explosion(){
@@ -320,13 +342,18 @@ void explosion(){
 void fence(){
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "fence2.bmp",
+                    "pared-enemigo.png",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
             );
 
     glEnable(GL_TEXTURE_2D);
+
+    // activar transparencia
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glBindTexture(GL_TEXTURE_2D, texture[0]);
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -348,6 +375,7 @@ void fence(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND); // desactivar transparencia
 
 }
 
@@ -357,13 +385,18 @@ void theSurface(){
 
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "softground.bmp",
+                    "suelo.jpg",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
             );
 
     glEnable(GL_TEXTURE_2D);
+
+    // activar transparencia
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glBindTexture(GL_TEXTURE_2D, texture[0]);
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -383,6 +416,7 @@ void theSurface(){
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND); // desactivar transparencia
 
     if (collide == true) {
         explosion();
@@ -433,38 +467,6 @@ void powerBar(){
 
 }
 
-void rulesBoard()
-{
-    glColor3f(1, 1, 1);
-
-    rules[0] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "rules.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, rules[0]);
-    //parametros
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glEnable(GL_TEXTURE_2D);
-
-    glBegin(GL_QUADS);
-
-    glTexCoord2f(0, 0);glVertex3f(1.0, 2.0, 0.0);
-    glTexCoord2f(1, 0);glVertex3f(3.5, 2.0, 0.0);
-    glTexCoord2f(1, 1);glVertex3f(3.5, 4.2, 0.0);
-    glTexCoord2f(0, 1);glVertex3f(1.0, 4.2, 0.0);
-    glEnd();
-
-    glDisable(GL_TEXTURE_2D);
-}
 
 void handleKeypress(unsigned char key, int x, int y) {
     if (freeze == false) {
@@ -540,7 +542,7 @@ void theCalculate(){
 }
 
 void Initialize() {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(0.6, 1.0, 1.0, 1.0);
 
     glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, 2.00, 1.0, 200.0);
