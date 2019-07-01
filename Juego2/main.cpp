@@ -1,656 +1,1606 @@
-#include <iostream>
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h> // freeglut instead of glut because glut is DEPRECATED
+#include <GL/gl.h>
+#include <GL/glut.h>
 #include <SOIL/SOIL.h>
 #include <SDL2/SDL.h>
+#include <iostream>
+#include "SDL2/SDL_mixer.h"
 
-using namespace std;
+#include <stdlib.h>
+#include <time.h>
 
-/*
- *       UNIVERSIDAD DE EL SALVADOR
- *        ALGORITMOS GRAFICOS 2019
- *
- *    JUEGO DE CAÑON (TIRO PARABOLICO)
- *           - ROBERTO HERBERTH MALTEZ GUARDADO - MG16071
- *           - ROBERTO ANTONIO ORTIZ ACEVEDO    - OA14002
- *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM140
- *
- * */
+#define RUTA_AUDIO "resources/audio/sweden.wav"
 
-
-GLfloat ortho = 200;
-GLfloat step = ortho/100;
-GLfloat defaultRotX = -45.0f, defaultRotZ = -135.0f;
-
-
-GLfloat X = 0.0f; // Translate screen to x direction (left or right)
-GLfloat Y = 0.0f; // Translate screen to y direction (up or down)
-GLfloat Z = 0.0f; // Translate screen to z direction (zoom in or out)
-GLfloat rotX = defaultRotX; // Rotate screen on x axis
-GLfloat rotY = 0.0f; // Rotate screen on y axis
-GLfloat rotZ = defaultRotZ; // Rotate screen on z axis
-
-// window title
-#define WINDOW_TITLE_PREFIX "GOLPEA EL OBJETIVO (CAIDA LIBRE)"
-
-// default window's size, but these settings are override later
-int
-        CurrentWidth = 800,
-        CurrentHeight = 600,
-        WindowHandle = 0;
-
-// frame-counter var
-unsigned FrameCount = 0;
-
-// function prototypes
-void Initialize(int, char *[]);
-
-void InitWindow(int, char *[]);
-
-void ResizeFunction(int, int);
-
-void RenderFunction();
-
-void TimerFunction(int);
-
-void IdleFunction();
-
-void display();
-
-void xyz();
-
-void keyboard(unsigned char, int, int);
-
-void specialKey(int, int, int);
-
-void translateRotate();
-
-//metodos para dibujar
-
-void torres();
-void pasillo();
 void suelo();
-void objetos();
-
-GLuint textura[0];
-GLint pared[0];
-//para LSD
-
-#define RUTA_AUDIO "Fuse Box.wav" //nombre del archivo de audio
-
-// variables para audio
-static Uint8 *audio_pos; // global pointer to the audio buffer to be played
-static Uint32 audio_len; // remaining length of the sample we have to play
-
-void my_audio_callback(void *userdata, Uint8 *stream, int len)
-{
-
-    if (audio_len ==0)
-        return;
-
-    len = ( len > audio_len ? audio_len : len );
-
-    SDL_memcpy (stream, audio_pos, len); // Simplemente copie desde un buffer en el otro
-    //SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME / 2); // Mezclar de un buffer a otro
-
-    audio_pos += len;
-    audio_len -= len;
-}
-
-
-// entry point
-int main(int argc, char *argv[]) {
-
-    Initialize(argc, argv);
-
-    glutMainLoop();
-
-    exit(EXIT_SUCCESS);
-}
-
-void luces(void){ //Funcion de la configuracion de la luz
-    GLfloat light_Ambient [4] = { 2.0, 2.0, 2.0, 2.0};
-    GLfloat light_Diffuse [4] = { 10.0, 1.0, 1.0, 1.0};
-    GLfloat light_Position [4] = {-100.0, -30.0, 0.0, 0.0};
-
-    glEnable (GL_LIGHTING);
-    glEnable (GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ambient );
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Diffuse );
-    glLightfv(GL_LIGHT0, GL_POSITION, light_Position );
-
-}
-
-// all drawings here
-void display() {
-
-    translateRotate(); // put this function before each drawing you make.
-    xyz();
-    //SDL_PauseAudio(false); //reproducir el audio
-    translateRotate(); // put this function before each drawing you make.
-
-
-    glColor3f(1,1,1);
-
-    //escenario
-    suelo();
-    torres();
-    glTranslatef(0,-70,0);
-    pasillo();
-
-    //objetos con animacion
-    objetos();
-
-
-
-
-
-
-
-}
-
-bool gravedad = false;
-int caida = 0;
-
-void objetos(){
-    glTranslatef(0,0,110);
-    glutSolidSphere(10,100,100);
-    glTranslatef(0,-40,0);
-    glutSolidSphere(10,100,100);
-    glTranslatef(0,80,0);
-    glutSolidSphere(10,100,100);
-
-    if(gravedad == true){
-        cout << "es verdadero" << caida;
-        caida--;
-        glTranslatef(0,0,caida);
-        glutSolidSphere(10,100,100);
-
-        if(caida == -10){
-            caida == 100;
-        }
-    }
-}
-
-void pasillo(){
-    textura[1] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "pasillo.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textura[1]);
-    //parametros
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(5,0); glVertex3f(5.0, -70.0, 100.0);
-    glTexCoord2f(5,5); glVertex3f(-5.0, -70.0, 100.0);
-    glTexCoord2f(0,5); glVertex3f(-5.0, 70.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(5.0, 70.0, 100.0);
-    glEnd();
-}
-
-void suelo(){
-    textura[2] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "tierra.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textura[2]);
-    //parametros
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(10,0); glVertex3f(100.0, -100.0, 0.0);
-    glTexCoord2f(10,10); glVertex3f(-100.0, -100.0, 0.0);
-    glTexCoord2f(0,10); glVertex3f(-100.0, 100.0, 0.0);
-    glTexCoord2f(0,0); glVertex3f(100.0, 100.0, 0.0);
-    glEnd();
-}
-
-void torres(){
-    textura[0] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "ladrillos.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textura[0]);
-    //parametros
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glDisable(GL_TEXTURE_GEN_S);
-
-    glDisable(GL_TEXTURE_GEN_T);
-
-    GLUquadricObj *quadratic;
-    quadratic = gluNewQuadric();
-    gluQuadricTexture(quadratic, GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
-
-    GLfloat r = 5;
-    GLfloat h = 100;
-
-    // cylinder that is to be textured…
-    glTranslatef(0,-70,0);
-    glutSolidCylinder(r, h, 100, 100);
-    glTranslatef(0,140,0);
-    glutSolidCylinder(r, h, 100, 100);
-
-    /*// I also tried this instead of the GL_QUADS
-    textura[1] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "pelota.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_3D, textura[1]);
-    gluDisk(quadratic, 0.0, r, 20, 1);
-    glDisable(GL_TEXTURE_3D);
-    gluDeleteQuadric(quadratic); */
-}
-
-
-void paredes(){
-    pared[0] = SOIL_load_OGL_texture // cargamos la imagen
-            (
-                    "ladrillo.bmp",
-                    SOIL_LOAD_AUTO,
-                    SOIL_CREATE_NEW_ID,
-                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-            );
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, pared[0]);
-    //parametros
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    //pared
-    glBegin(GL_QUADS);
-    glColor4f(1, 1, 1, 1);
-    glNormal3f( 1.0f, 1.0f,1.0f);
-    //pared atras
-    glTexCoord2f(10,0); glVertex3f(50.0, -200.0, 0.0);
-    glTexCoord2f(10,10); glVertex3f(50.0, -200.0, 100.0);
-    glTexCoord2f(0,10); glVertex3f(50.0, 200.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(50.0, 200.0, 00.0);
-    //pared adelante
-    glTexCoord2f(10,0); glVertex3f(-50.0, -200.0, 0.0);
-    glTexCoord2f(10,10); glVertex3f(-50.0, -200.0, 100.0);
-    glTexCoord2f(0,10); glVertex3f(-50.0, 200.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(-50.0, 200.0, 00.0);
-    //pared izquierda
-    glTexCoord2f(10,10); glVertex3f(50.0, -200.0, 100.0);
-    glTexCoord2f(0,10); glVertex3f(-50.0, -200.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(-50.0, -200.0, 0.0);
-    glTexCoord2f(10,0); glVertex3f(50.0, -200.0, 0.0);
-    //pared derecha
-    glTexCoord2f(10,10); glVertex3f(50.0, 200.0, 100.0);
-    glTexCoord2f(0,10); glVertex3f(-50.0, 200.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(-50.0, 200.0, 0.0);
-    glTexCoord2f(10,0); glVertex3f(50.0, 200.0, 0.0);
-    //abajo
-    glTexCoord2f(10,0); glVertex3f(50.0, -200.0, 0.0);
-    glTexCoord2f(10,10); glVertex3f(-50.0, -200.0, 0.0);
-    glTexCoord2f(0,10); glVertex3f(-50.0, 200.0, 0.0);
-    glTexCoord2f(0,0); glVertex3f(50.0, 200.0, 0.0);
-    //arriba
-    glTexCoord2f(10,0); glVertex3f(50.0, -200.0, 100.0);
-    glTexCoord2f(10,10); glVertex3f(-50.0, -200.0, 100.0);
-    glTexCoord2f(0,10); glVertex3f(-50.0, 200.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(50.0, 200.0, 100.0);
-    glEnd();
-}
-
-void xyz() {
-
-    // glRotatef and glTranslatef
-
-    cout << "rot(" << rotX << ", " << rotY << ", " << rotZ << ")" << endl;
-    cout << "trans(" << X << ", " << Y << ", " << Z << ")" << endl;
-
-    // up or down or zoom in zoom out
-    // Draw the positive side of the lines x,y,z
-    glBegin(GL_LINES);
-    glColor3f(0.0, 1.0, 0.0); // Green for x axis
-    glVertex3f(0, 0, 0);
-    glVertex3f(10 * ortho, 0, 0);
-    glColor3f(1.0, 0.0, 0.0); // Red for y axis
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 10 * ortho, 0);
-    glColor3f(0.0, 0.0, 1.0); // Blue for z axis
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, 10 * ortho);
-
-    glEnd();
-
-    // Dotted lines for the negative sides of x,y,z
-    glEnable(GL_LINE_STIPPLE);    // Enable line stipple to use a
-    // dotted pattern for the lines
-    glLineStipple(1, 0x0101);    // Dotted stipple pattern for the lines
-    glBegin(GL_LINES);
-    glColor3f(0.0, 1.0, 0.0);    // Green for x axis
-    glVertex3f(-10 * ortho, 0, 0);
-    glVertex3f(0, 0, 0);
-    glColor3f(1.0, 0.0, 0.0);    // Red for y axis
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, -10 * ortho, 0);
-    glColor3f(0.0, 0.0, 1.0);    // Blue for z axis
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, -10 * ortho);
-
-    glEnd();
-
-    glDisable(GL_LINE_STIPPLE);    // Disable the line stipple
-    glPopMatrix();        // Don't forget to pop the Matrix
-}
-
-void Initialize(int argc, char *argv[]) {
-
-    GLenum GlewInitResult;
-
-    InitWindow(argc, argv);
-
-    GlewInitResult = glewInit();
-
-    if (GLEW_OK != GlewInitResult) {
-        fprintf(
-                stderr,
-                "ERROR: %s\n",
-                glewGetErrorString(GlewInitResult)
-        );
-        exit(EXIT_FAILURE);
-    }
-
-    // print system's capability
-    fprintf(
-            stdout,
-            "INFO: OpenGL Version: %s\n",
-            glGetString(GL_VERSION)
-    );
-
-    // OpenGL clear color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-}
-
-void InitWindow(int argc, char *argv[]) {
-    glutInit(&argc, argv);
-
-    // set OpenGL's major and minor versions
-    glutInitContextVersion(1, 0);
-
-    // Only not deprecated methods allowed
-    glutInitContextFlags(GLUT_FORWARD_COMPATIBLE);
-    glutInitContextProfile(GLUT_CORE_PROFILE);
-
-    // set behavior on window close by user
-    glutSetOption(
-            GLUT_ACTION_ON_WINDOW_CLOSE,
-            GLUT_ACTION_GLUTMAINLOOP_RETURNS
-    );
-
-    // settings initial values for the window, this override deafult values on top
-    glutInitWindowSize(glutGet(GLUT_SCREEN_WIDTH), glutGet(GLUT_SCREEN_HEIGHT));
-
-    // way to render frames
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-    //glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);    // Setup display mode to
-    glShadeModel(GL_FLAT); // Set the shading model to GL_FLAT
-    glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); // Set Line Antialiasing
-
+void torre();
+void puente();
+void perimetro();
+void porton();
+void steveHead();
+void steveTorso();
+void steveBrazo();
+void stevePierna();
+
+void objeto1();
+void objeto2();
+void objeto3();
+
+int animating = 0;
+int frameNumber; // Numero de frames
+
+//Definimos variables
+double rotate_y = 0;
+double rotate_x = 0;
+double rotate_z = 0;
+
+GLfloat X = 0.0f;
+GLfloat Y = -5.5f;
+GLfloat Z = -2.5f;
+GLfloat scale = 0.1f;
+
+//Parametros del personaje
+GLfloat step = 2.5;
+GLfloat RotPersoAngle = 180.0f, RotPersoX = 0.0f, RotPersoY = 1.0f, RotPersoZ = 0.0f;
+GLfloat PosPersoX = 0.0f, PosPersoY = 13.5f, PosPersoZ = -14.5f;
+
+GLfloat PosObj1X = 0.0f, PosObj1Y = 80.0f, PosObj1Z = 15.0f;
+GLfloat PosObj2X = 40.0f, PosObj2Y = 80.0f, PosObj2Z = 15.0f;
+GLfloat PosObj3X = -40.0f, PosObj3Y = 80.0f, PosObj3Z = 15.0f;
+
+GLuint ListTower, ListPuente, ListPerimetro, ListPorton, ListSuelo;
+GLuint ListHead, ListTorso, ListBrazo, ListPierna;
+GLuint ListObjeto1, ListObjeto2, ListObjeto3;
+
+//Arreglo de imagenes
+GLuint texture[0];
+
+//parametros de la fuente de luz
+GLfloat LightAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
+GLfloat LightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat LightPosition[] = {1.0f, 1.0f, 1.0f, 0.0f};
+
+void init(void) {
+    //Carga la textura
     glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-    glClearDepth(0.5f);
+    glClearColor(0.046f, 0.714f, 0.945f, 0.5f);
+    glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    // if windowHandle is greater than 0, then no errors on creating the window
-    WindowHandle = glutCreateWindow(WINDOW_TITLE_PREFIX);
+    //glEnable(GL_LIGHTING);
+    glDepthFunc(GL_LESS); //comparación de profundidad
+    glEnable(GL_DEPTH_TEST); //activa GL_DEPTH_TEST
+    glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+    glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+    //activa la luz
+    glEnable(GL_LIGHT0);
 
-    if (WindowHandle < 1) {
-        fprintf(
-                stderr,
-                "ERROR: Could not create a new rendering window.\n"
-        );
-        exit(EXIT_FAILURE);
+    /* Generador de numeros aleatorios */
+    srand(time(NULL));
+    int posRand = 1 + rand() % (90 - 1);
+    std::cout << posRand << std::endl;
+    if(posRand > 45){
+        PosPersoX = (posRand - 45) * - 1;
+    }else{
+        PosPersoX = posRand;
     }
+    std::cout << PosPersoX << std::endl;
 
-    // reset draws to the new size
-    glutReshapeFunc(ResizeFunction);
-    glutDisplayFunc(RenderFunction);
+    ListTower = glGenLists(1);
+    glNewList(ListTower, GL_COMPILE);
+    torre();
+    glEndList();
 
-    // behavior to run at idle
-    glutIdleFunc(IdleFunction);
-    glutTimerFunc(0, TimerFunction, 0);
+    ListPuente = glGenLists(1);
+    glNewList(ListPuente, GL_COMPILE);
+    puente();
+    glEndList();
 
-    // sonido
-    // Inicializar SDL.
+    ListPerimetro = glGenLists(1);
+    glNewList(ListPerimetro, GL_COMPILE);
+    perimetro();
+    glEndList();
 
+    ListPorton = glGenLists(1);
+    glNewList(ListPorton, GL_COMPILE);
+    porton();
+    glEndList();
 
-    // Variables locales
-    static Uint32 wav_length; // Longitud de nuestra muestra
-    static Uint8 *wav_buffer; // Buffer que contiene nuestro archivo de audio
-    static SDL_AudioSpec wav_spec; // Las especificaciones de nuestra pieza de música
+    ListSuelo = glGenLists(1);
+    glNewList(ListSuelo, GL_COMPILE);
+    suelo();
+    glEndList();
 
-    /* Cargar el WAV */
-    // Las especificaciones, la longitud y el búfer de nuestro wav se llenan
-    if( SDL_LoadWAV(RUTA_AUDIO, &wav_spec, &wav_buffer, &wav_length) == NULL )
-    {
+    ListHead = glGenLists(1);
+    glNewList(ListHead, GL_COMPILE);
+    steveHead();
+    glEndList();
 
-    }
-    // Establecer la función de devolución de llamada
-    wav_spec.callback = my_audio_callback;
-    wav_spec.userdata = NULL;
+    ListTorso = glGenLists(1);
+    glNewList(ListTorso, GL_COMPILE);
+    steveTorso();
+    glEndList();
 
-    // Establecer nuestras variables estáticas globales
-    audio_pos = wav_buffer; // Copia el buffer de sonido
-    audio_len = wav_length; // Copia la longitud del archivo
+    ListBrazo = glGenLists(1);
+    glNewList(ListBrazo, GL_COMPILE);
+    steveBrazo();
+    glEndList();
 
-    /*Abrir el dispositivo de audio */
-    if ( SDL_OpenAudio(&wav_spec, NULL) < 0 )
-    {
-        fprintf(stderr, "No se pudo abrir el audio: %s\n", SDL_GetError());
-        exit(-1);
-    }
+    ListPierna = glGenLists(1);
+    glNewList(ListPierna, GL_COMPILE);
+    stevePierna();
+    glEndList();
 
-    // other function calls
-    glutKeyboardFunc(keyboard);
-    glutSpecialFunc(specialKey);
+    ListObjeto1 = glGenLists(1);
+    glNewList(ListObjeto1, GL_COMPILE);
+    objeto1();
+    glEndList();
+
+    ListObjeto2 = glGenLists(1);
+    glNewList(ListObjeto2, GL_COMPILE);
+    objeto2();
+    glEndList();
+
+    ListObjeto3 = glGenLists(1);
+    glNewList(ListObjeto3, GL_COMPILE);
+    objeto3();
+    glEndList();
+
 }
 
-void ResizeFunction(int Width, int Height) {
-    CurrentWidth = Width;
-    CurrentHeight = Height;
+void suelo() {
+    texture[0] = SOIL_load_OGL_texture // cargamos la imagen
+            (
+                    "suelo.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
 
-    glViewport(0, 0, (GLsizei) CurrentWidth, (GLsizei) CurrentHeight); // Set the viewport
-    glMatrixMode(GL_PROJECTION);    // Set the Matrix mode
-    glLoadIdentity();
-    //gluPerspective(75, (GLfloat) CurrentWidth / (GLfloat) CurrentHeight, 0, 300.0);
-    glOrtho(-ortho, ortho, -ortho, ortho, -ortho, ortho);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+
+    glColor3f(1, 1, 1);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-400.0f, 00.0f, -400.0f);
+    glTexCoord2f(62.0f, 0.0f); glVertex3f(400.0f, 00.0f, -400.0f);
+    glTexCoord2f(62.0f, 62.0f); glVertex3f(400.0f, 00.0f, 400.0f);
+    glTexCoord2f(0.0f, 62.0f); glVertex3f(-400.0f, 00.0f, 400.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+}
+
+void torre() {
+    //Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "stonebrick.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 0.0f, 10.0f);
+    glTexCoord2f(4.0f, 0.0f); glVertex3f(10.0f, 0.0f, 10.0f);
+    glTexCoord2f(4.0f, 16.0f); glVertex3f(10.0f, 100.0f, 10.0f);
+    glTexCoord2f(0.0f, 16.0f); glVertex3f(-10.0f, 100.0f, 10.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(4.0f, 0.0f); glVertex3f(-10.0f, 0.0f, -10.0f);
+    glTexCoord2f(4.0f, 16.0f); glVertex3f(-10.0f, 100.0f, -10.0f);
+    glTexCoord2f(0.0f, 16.0f); glVertex3f(10.0f, 100.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, 0.0f, -10.0f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 4.0f); glVertex3f(-10.0f, 100.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 100.0f, 10.0f);
+    glTexCoord2f(4.0f, 0.0f); glVertex3f(10.0f, 100.0f, 10.0f);
+    glTexCoord2f(4.0f, 4.0f); glVertex3f(10.0f, 100.0f, -10.0f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(4.0f, 0.0f); glVertex3f(10.0f, 0.0f, -10.0f);
+    glTexCoord2f(4.0f, 16.0f); glVertex3f(10.0f, 100.0f, -10.0f);
+    glTexCoord2f(0.0f, 16.0f); glVertex3f(10.0f, 100.0f, 10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, 0.0f, 10.0f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 0.0f, -10.0f);
+    glTexCoord2f(4.0f, 0.0f); glVertex3f(-10.0f, 0.0f, 10.0f);
+    glTexCoord2f(4.0f, 16.0f); glVertex3f(-10.0f, 100.0f, 10.0f);
+    glTexCoord2f(0.0f, 16.0f); glVertex3f(-10.0f, 100.0f, -10.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void puente() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "stonebrick.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-50.0f, 75.0f, 8.0f);
+    glTexCoord2f(17.0f, 0.0f); glVertex3f(50.0f, 75.0f, 8.0f);
+    glTexCoord2f(17.0f, 2.5f); glVertex3f(50.0f, 90.8f, 8.0f);
+    glTexCoord2f(0.0f, 2.5f); glVertex3f(-50.0f, 90.8f, 8.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(17.0f, 0.0f); glVertex3f(-50.0f, 75.0f, -8.0f);
+    glTexCoord2f(17.0f, 2.5f); glVertex3f(-50.0f, 90.8f, -8.0f);
+    glTexCoord2f(0.0f, 2.5f); glVertex3f(50.0f, 90.8f, -8.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(50.0f, 75.0f, -8.0f);
+    glEnd();
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-50.0f, 70.0f, 10.0f);
+    glTexCoord2f(17.0f, 0.0f); glVertex3f(50.0f, 70.0f, 10.0f);
+    glTexCoord2f(17.0f, 1.0f); glVertex3f(50.0f, 75.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-50.0f, 75.0f, 10.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(17.0f, 0.0f); glVertex3f(-50.0f, 70.0f, -10.0f);
+    glTexCoord2f(17.0f, 1.0f); glVertex3f(-50.0f, 75.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(50.0f, 75.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(50.0f, 70.0f, -10.0f);
+    glEnd();
+
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 4.0f); glVertex3f(-50.0f, 75.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-50.0f, 75.0f, 10.0f);
+    glTexCoord2f(17.0f, 0.0f); glVertex3f(50.0f, 75.0f, 10.0f);
+    glTexCoord2f(17.0f, 4.0f); glVertex3f(50.0f, 75.0f, -10.0f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(17.0f, 4.0f); glVertex3f(-50.0f, 70.0f, -10.0f);
+    glTexCoord2f(0.0f, 4.0f); glVertex3f(50.0f, 70.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(50.0f, 70.0f, 10.0f);
+    glTexCoord2f(17.0f, 0.0f); glVertex3f(-50.0f, 70.0f, 10.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void perimetro() {
+    //Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "stonebrick.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    //Pared perimetral izquierda
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-200.0f, 0.0f, 0.0f);
+    glTexCoord2f(28.0f, 0.0f); glVertex3f(-10.0f, 0.0f, 0.0f);
+    glTexCoord2f(28.0f, 12.0f); glVertex3f(-10.0f, 65.0f, 0.0f);
+    glTexCoord2f(0.0f, 12.0f); glVertex3f(-200.0f, 65.0f, 0.0f);
+    glEnd();
+
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void porton() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "oak.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, 0.0f, 0.0f);
+    glTexCoord2f(16.0f, 0.0f); glVertex3f(110.0f, 0.0f, 0.0f);
+    glTexCoord2f(16.0f, 6.0f); glVertex3f(110.0f, 50.0f, 0.0f);
+    glTexCoord2f(0.0f, 6.0f); glVertex3f(10.0f, 50.0f, 0.0f);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void steveHead() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "head/front.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[1] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "head/back.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[2] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "head/top.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[3] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "head/button.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[4] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "head/right.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[5] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "head/left.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-5.0f, -5.0f, 5.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(5.0f, -5.0f, 5.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(5.0f, 5.0f, 5.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-5.0f, 5.0f, 5.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-5.0f, -5.0f, -5.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-5.0f, 5.0f, -5.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(5.0f, 5.0f, -5.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(5.0f, -5.0f, -5.0f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-5.0f, 5.0f, -5.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-5.0f, 5.0f, 5.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(5.0f, 5.0f, 5.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(5.0f, 5.0f, -5.0f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-5.0f, -5.0f, -5.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(5.0f, -5.0f, -5.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(5.0f, -5.0f, 5.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-5.0f, -5.0f, 5.0f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(5.0f, -5.0f, -5.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(5.0f, 5.0f, -5.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(5.0f, 5.0f, 5.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(5.0f, -5.0f, 5.0f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[5]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-5.0f, -5.0f, -5.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-5.0f, -5.0f, 5.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-5.0f, 5.0f, 5.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-5.0f, 5.0f, -5.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void objeto1() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto1/crafting_table_front.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[2] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto1/crafting_table_button.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[3] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto1/crafting_table_side.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[4] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto1/crafting_table_top.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void objeto2() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto2/bookshelf.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[1] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto2/button.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void objeto3() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto3/melon_side.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[1] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "objeto3/melon_top.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(10.0f, 10.0f, -10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(10.0f, -10.0f, 10.0f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-10.0f, -10.0f, -10.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-10.0f, -10.0f, 10.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-10.0f, 10.0f, 10.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-10.0f, 10.0f, -10.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void steveTorso() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "torso/front.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[1] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "torso/back.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[2] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "torso/top.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[3] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "torso/button.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[4] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "torso/right.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[5] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "torso/left.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-5.0f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(5.0f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(5.0f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-5.0f, 7.5f, 2.5f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-5.0f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-5.0f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(5.0f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(5.0f, -7.5f, -2.5f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-5.0f, 7.5, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-5.0f, 7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(5.0f, 7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(5.0f, 7.5f, -2.5f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-5.0f, -7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(5.0f, -7.5f, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(5.0f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-5.0f, -7.5f, 2.5f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(5.0f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(5.0f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(5.0f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(5.0f, -7.5f, 2.5f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[5]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-5.0f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-5.0f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-5.0f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-5.0f, 7.5f, -2.5f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void steveBrazo() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "arm/front.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[1] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "arm/back.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[2] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "arm/top.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[3] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "arm/button.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[4] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "arm/right.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[5] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "arm/left.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, 2.5f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, -2.5f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.5f, 7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(2.5f, 7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, -2.5f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-2.5f, -7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(2.5f, -7.5f, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, 2.5f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, 2.5f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[5]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, -2.5f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void stevePierna() {
+//Definicion de texturas
+    texture[0] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "leg/front.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[1] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "leg/back.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[2] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "leg/top.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    texture[3] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "leg/button.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[4] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "leg/right.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+    texture[5] = SOIL_load_OGL_texture // load an image file directly as a new OpenGL texture
+            (
+                    "leg/left.bmp",
+                    SOIL_LOAD_AUTO,
+                    SOIL_CREATE_NEW_ID,
+                    SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+            );
+
+    // Frente
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glBegin(GL_POLYGON);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, 2.5f);
+    glEnd();
+
+    // parte de Atras
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, -2.5f);
+    glEnd();
+    // Arriba
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.5f, 7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(2.5f, 7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, -2.5f);
+    glEnd();
+
+    // Abajo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glBegin(GL_POLYGON);
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-2.5f, -7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(2.5f, -7.5f, -2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, 2.5f);
+    glEnd();
+
+    // lado Derecho
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
+    glBegin(GL_POLYGON);
+    glNormal3f(1.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, -2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(2.5f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(2.5f, -7.5f, 2.5f);
+    glEnd();
+
+    // Lado Izquierdo
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture[5]);
+    glBegin(GL_POLYGON);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, -2.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-2.5f, -7.5f, 2.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, 2.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.5f, 7.5f, -2.5f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    /*gluLookAt(rotLx, rotLy, rotLz + 15.0,
-            0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0);*/
-}
+    //Transladar el cubo a las siguientes coordenadas
+    glTranslatef(0.0f, 0.0f, -5.5f);
 
-void RenderFunction() {
-    ++FrameCount; // increasing fps counter
-    glClear(GL_COLOR_BUFFER_BIT);
+    // Rotar la camara en el eje X,Y y Z
+    glRotatef(rotate_x, 1.0, 0.0, 0.0);
+    glRotatef(rotate_y, 0.0, 1.0, 0.0);
+    glRotatef(rotate_z, 0.0, 0.0, 1.0);
+    glTranslatef(X, Y, Z);    // Transladar la camara en los 3 ejes
+    // Otras transformaciones
+    glScalef(scale, scale, scale); //Configurar la escala de la escena
+
+    glTranslatef(0.0, -22.5, 0.0);
+    glCallList(ListSuelo);
+    //glTranslatef(0.0, 22.5, 0.0);
+
+    glTranslatef(-60.0, 0.0f, 0.0);
+    glCallList(ListTower);
+    glCallList(ListPerimetro);
+    glTranslatef(330.0, 0.0f, 0.0);
+    glCallList(ListPerimetro);
+    glTranslatef(-330.0, 0.0f, 0.0);
+
+    glCallList(ListPorton);
+
+    glTranslatef(120.0, 0.0f, 0.0);
+    glCallList(ListTower);
+    glTranslatef(-60.0, 0.0f, 0.0);
+    glCallList(ListPuente);
+
+    /* Carga de los diferentes Objetos */
 
 
-    // DRAWINGS START
-    display();
-    // DRAWINGS END
+    glTranslatef(PosObj1X, PosObj1Y, PosObj1Z);
+    glScalef(0.5f,0.5f,0.5f);
+    glCallList(ListObjeto1);
+    glScalef(2.0f,2.0f,2.0f);
+    glTranslatef(PosObj1X*-1, PosObj1Y*-1, PosObj1Z*-1);
 
-    // send all draws
-    glPopMatrix();
-    glFlush();
+    glTranslatef(PosObj2X, PosObj2Y, PosObj2Z);
+    glScalef(0.5f,0.5f,0.5f);
+    glCallList(ListObjeto2);
+    glScalef(2.0f,2.0f,2.0f);
+    glTranslatef(PosObj2X*-1, PosObj2Y*-1, PosObj2Z*-1);
 
-    // OpenGL is the front when calling to glutSwapBuffers();
+    glTranslatef(PosObj3X, PosObj3Y, PosObj3Z);
+    glScalef(0.5f,0.5f,0.5f);
+    glCallList(ListObjeto3);
+    glScalef(2.0f,2.0f,2.0f);
+    glTranslatef(PosObj3X*-1, PosObj3Y*-1, PosObj3Z*-1);
+
+
+    //PERSONAJE
+    glRotatef(RotPersoAngle, RotPersoX, RotPersoY, RotPersoZ);
+    glTranslatef(PosPersoX, PosPersoY, PosPersoZ); //Para coordinar la posición del personaje
+
+    glScalef(0.6f,0.6f,0.6f);
+    glCallList(ListTorso);
+    glTranslatef(0.0, 12.5, 0.0);
+    glCallList(ListHead);
+
+    glTranslatef(7.5, -6.5, 4.5);
+    glRotatef(260,1,0,0);
+    glCallList(ListBrazo);
+    glTranslatef(-15.0, 0.0, 1.5);
+    glRotatef(-15,1,0,0);
+    glCallList(ListBrazo);
+
+    glRotatef(-245,1,0,0);
+    glTranslatef(5.0, -22.5, -4.30);
+    glCallList(ListPierna);
+    glTranslatef(5, 0.0, 0.0f);
+    glCallList(ListPierna);
+
+    //glFlush();
     glutSwapBuffers();
-    //glutPostRedisplay();
+
 }
 
-void IdleFunction() {
+// Función para controlar teclas especiales
+void specialKeys(int key, int x, int y) {
+
+    //  Flecha derecha: aumentar rotación 7 grados
+    if (key == GLUT_KEY_UP)
+        rotate_x += 7;
+        //  Flecha abajo: rotación en eje X negativo 7 grados
+    else if (key == GLUT_KEY_DOWN)
+        rotate_x -= 7;
+        //  Tecla especial F2 : rotación en eje Z positivo 7 grados
+    else if (key == GLUT_KEY_F2)
+        rotate_z += 7;
+        //  Tecla especial F2 : rotación en eje Z negativo 7 grados
+    else if (key == GLUT_KEY_F2)
+        rotate_z -= 7;
+
+    //  Solicitar actualización de visualización
+    glutPostRedisplay();
+
+}
+
+void reshape(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(60.0, (float) w / (float) h, 1.0, 200.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+
+}
+
+void pauseAnimation() {
+    // Llamamo a la función para detener la animación
+    animating = 0;
+}
+
+void updateFrame() {
+    // En esta funcion agregamos el codigo que hara la secuencia de cada escena como si fuera un fotograma
+
+    glColor3f(0.0,1.0,0.0);
+    //Hacemos que la tetera gire
+    for (int i=0; i<=5; i++){
+        PosObj1Y = PosObj1Y -= 0.5;
+        PosObj2Y = PosObj2Y -= 0.5;
+        PosObj3Y = PosObj3Y -= 0.5;
+        //std::cout << PosObj1Y << std::endl;
+    }
+    //Verificamos el numero de frames para detener animación
+    if(frameNumber==25)
+    {
+        pauseAnimation();
+        frameNumber=0;
+    }
+    //Almacenamos el numero de frames
+    frameNumber++;
+    printf ("Numero de Frame: %d \n", frameNumber);
+}
+
+void timerFunction(int timerID) {
+    // Invocamos la funcion para controlar el tiempo de la ejecucion de funciones
+    if (animating) {
+        updateFrame();
+        glutTimerFunc(30, timerFunction, 0);
+        glutPostRedisplay();
+    }
+}
+
+void startAnimation() {
+    // llamamos la función para iniciar la animación
+    if (!animating) {
+        animating= 1;
+        glutTimerFunc(30, timerFunction, 1);
+    }
+}
+
+// Función para controlar teclas normales del teclado.
+void keyboard(unsigned char key, int x, int y) {
+    //control de teclas que hacen referencia a Escalar y transladar el cubo en los ejes X,Y,Z.
+    GLfloat temp;
+    switch (key) {
+        case 'w':
+            if (RotPersoAngle != 180) {
+
+                //Corrige las coordenadas cuando proviene de 270
+                if (RotPersoAngle == 270) {
+                    temp = PosPersoX;
+                    PosPersoX = -1 * PosPersoZ;
+                    PosPersoZ = temp;
+                }
+
+                //Corrige las coordenadas cuando proviene de 0
+                if (RotPersoAngle == 90) {
+                    temp = PosPersoX;
+                    PosPersoX = PosPersoZ;
+                    PosPersoZ = -1 * temp;
+                }
+
+                RotPersoAngle = 180;
+                RotPersoY = 1;
+                PosPersoX *= -1;
+                PosPersoZ *= -1;
+            }
+            PosPersoZ += step;
+            break;
+
+        case 'a':
+            PosObj1X -= 1;
+            PosObj2X -= 1;
+            PosObj3X -= 1;
+
+            /*if (RotPersoAngle != 270) {
+
+                if (RotPersoAngle == 180) {
+                    temp = PosPersoX;
+                    PosPersoX = PosPersoZ;
+                    PosPersoZ = -1 * temp;
+                }
+
+                if (RotPersoAngle == 0) {
+                    temp = PosPersoX;
+                    PosPersoX = -1 * PosPersoZ;
+                    PosPersoZ = temp;
+                }
+
+                RotPersoAngle = 270;
+                RotPersoY = 1;
+                PosPersoX *= -1;
+                PosPersoZ *= -1;
+            }
+            PosPersoZ += step;*/
+            break;
+
+        case 's' :
+
+            if (RotPersoAngle != 0) {
+
+                //Corrige las coordenadas cuando proviene de 270
+                if (RotPersoAngle == 270) {
+                    temp = PosPersoX;
+                    PosPersoX = PosPersoZ;
+                    PosPersoZ = -1 * temp;
+                }
+
+                //Corrige las coordenadas cuando proviene de 0
+                if (RotPersoAngle == 90) {
+                    temp = PosPersoX;
+                    PosPersoX = -1*PosPersoZ;
+                    PosPersoZ = temp;
+                }
+
+                RotPersoAngle = 0;
+                RotPersoY = 1;
+                PosPersoX *= -1;
+                PosPersoZ *= -1;
+            }
+            PosPersoZ += step;
+            break;
+
+        case '1':
+            PosObj1Y = 280.0f;
+            PosObj2Y = 280.0f;
+            PosObj3Y = 80.0f;
+            break;
+        case '2':
+            PosObj1Y = 80.0f;
+            PosObj2Y = 280.0f;
+            PosObj3Y = 280.0f;
+            break;
+        case '3':
+            PosObj1Y = 280.0f;
+            PosObj2Y = 80.0f;
+            PosObj3Y = 280.0f;
+            break;
+        case 'd' :
+            PosObj1X += 1;
+            PosObj2X += 1;
+            PosObj3X += 1;
+            /*if (RotPersoAngle != 90) {
+
+                if (RotPersoAngle == 180) {
+                    temp = PosPersoX;
+                    PosPersoX = -1 * PosPersoZ;
+                    PosPersoZ = temp;
+                }
+
+                if (RotPersoAngle == 0) {
+                    temp = PosPersoX;
+                    PosPersoX = PosPersoZ;
+                    PosPersoZ = -1 * temp;
+                }
+
+                RotPersoAngle = 90;
+                RotPersoY = 1;
+                PosPersoX *= -1;
+                PosPersoZ *= -1;
+            }
+            PosPersoZ += step;*/
+            break;
+        case '8' :
+            Y -= 0.1f;
+            break;
+        case '5' :
+            Y += 0.1f;
+            break;
+        case '4':
+            X -= 0.1f;
+            break;
+        case '6':
+            X += 0.1f;
+            break;
+        case '7':
+            rotate_y += 5;
+            break;
+        case '9':
+            rotate_y -= 5;
+            break;
+        case '-':
+            Z -= 0.1f;
+            break;
+        case '+':
+            Z += 0.1f;
+            break;
+        case '?':
+            std::cout << "X: " << X << std::endl;
+            std::cout << "Y: " << Y << std::endl;
+            std::cout << "Z: " << Z << std::endl;
+            std::cout << "Perso X: " << PosPersoX << std::endl;
+            std::cout << "Perso Y: " << PosPersoY << std::endl;
+            std::cout << "Perso Z: " << PosPersoZ << std::endl;
+            std::cout << "Perso Angle: " << RotPersoAngle << std::endl;
+            std::cout << "Perso RotX: " << RotPersoX << std::endl;
+            std::cout << "Perso RotY: " << RotPersoY << std::endl;
+            std::cout << "Perso RotZ: " << RotPersoZ << std::endl;
+            break;
+        case ' ':
+            if (animating){
+                pauseAnimation();
+            }else{
+                startAnimation();
+            }
+            break;
+        case 'q':
+            exit(0);            // exit
+    }
     glutPostRedisplay();
 }
 
-void TimerFunction(int Value) {
-    if (0 != Value) {
-        char *TempString = (char *)
-                malloc(512 + strlen(WINDOW_TITLE_PREFIX));
+void update(int value) {
+    rotate_y += 5;
+    rotate_x += 6;
+    rotate_z += 7;
 
-        sprintf(
-                TempString,
-                "%s: %d FPS @ %d x %d",
-                WINDOW_TITLE_PREFIX,
-                FrameCount * 4,
-                CurrentWidth,
-                CurrentHeight
-        );
-
-        glutSetWindowTitle(TempString);
-        free(TempString);
-    }
-
-    FrameCount = 0;
-    glutTimerFunc(250, TimerFunction, 1);
+    glutPostRedisplay();
+    glutTimerFunc(25, update, 0);
 }
 
-// This function is used for the navigation keys
-void keyboard(unsigned char key, int x, int y) {
-    switch (key) {   // x,X,y,Y,z,Z uses the glRotatef() function
+int main(int argc, char *argv[]) {
 
-        // I-J-K-L-U-O for 90 degrees rotation
-        case 'j': // Rotates on x axis by -90 degree
-        case 'J':
-            gravedad == true;
-            break;
-        case 'l': // Rotates on x axis by 90 degree
-        case 'L':
-            rotX += 90.0f;
-            break;
+    if( SDL_Init(SDL_INIT_AUDIO) < 0 ) exit(1);
+    // Setup audio mode
+    Mix_OpenAudio(22050,AUDIO_S16SYS,2,640);
+    Mix_Music *mus;  // Background Music
 
-        case 'k': // Rotates on y axis by -90 degree
-        case 'K':
-            rotY -= 90.0f;
-            break;
-        case 'i': // Rotates on y axis by 90 degree
-        case 'I':
-            rotY += 90.0f;
-            break;
-        case 'u': // Rotates on z axis by -90 degree
-        case 'U':
-            rotZ -= 90.0f;
-            break;
-        case 'o': // Rotates on z axis by 90 degree
-        case 'O':
-            rotZ += 90.0f;
-            break;
+    mus = Mix_LoadMUS(RUTA_AUDIO);
+    Mix_PlayMusic(mus,1); //Music loop=1
 
-        case 'r': // Default, resets the translations vies from starting view
-        case 'R':
-            X = Y = 0.0f;
-            Z = 0.0f;
-            rotX = defaultRotX;
-            rotY = 0.0f;
-            rotZ = defaultRotZ;
-            break;
+    //  Inicializar los parámetros GLUT y de usuario proceso
+    glutInit(&argc, argv);
 
-            // W-A-S-D
+    // Solicitar ventana con color real y doble buffer con Z-buffer
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-        case 's': // Rotates screen on x axis
-        case 'S':
-            rotX -= step;
-            break;
-        case 'w': // Opposite way
-        case 'W':
-            rotX += step;
-            break;
+    glutInitWindowSize(1280, 720);
+    glutInitWindowPosition(0, 0);
+    // Crear ventana
+    glutCreateWindow("Defiende la puerta");
+    init();
+    // Habilitar la prueba de profundidad de Z-buffer
+    glEnable(GL_DEPTH_TEST);
 
-        case 'd': // Rotates screen on z axis
-        case 'D':
-            rotZ -= step;
-            break;
+    // Funciones de retrollamada
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
+    //glutTimerFunc(30, update, 0);
+    // Pasar el control de eventos a GLUT
+    glutMainLoop();
 
-        case 'a': // Opposite way
-        case 'A':
-            rotZ += step;
-            break;
-        default:
-            break;
-    }
-    glutPostRedisplay(); // Redraw the scene
-}
+    // Regresar al sistema operativo
+    return 0;
 
-// called on special key pressed
-void specialKey(int key, int x, int y) {
-
-// The keys below are using the gluLookAt() function for navigation
-// Check which key is pressed
-
-    switch (key) {
-        case GLUT_KEY_LEFT : // Rotate on x axis
-            X -= step;
-            break;
-        case GLUT_KEY_RIGHT : // Rotate on x axis (opposite)
-            X += step;
-            break;
-        case GLUT_KEY_UP : // Rotate on y axis
-            Y += step;
-            break;
-        case GLUT_KEY_DOWN : // Rotate on y axis (opposite)
-            Y -= step;
-            break;
-        case GLUT_KEY_PAGE_UP: // Rotate on z axis
-            Z -= step;
-            break;
-        case GLUT_KEY_PAGE_DOWN:// Rotate on z axis (opposite)
-            Z += step;
-            break;
-        default:
-            break;
-    }
-    glutPostRedisplay(); // Redraw the scene
-}
-
-// this function is used to move objects along with XYZ
-void translateRotate() {
-    glPushMatrix();    // It is important to push the Matrix before calling
-    glRotatef(rotX, 1.0, 0.0, 0.0); // Rotate on x
-    glRotatef(rotY, 0.0, 1.0, 0.0); // Rotate on y
-    glRotatef(rotZ, 0.0, 0.0, 1.0); // Rotate on z
-    glTranslatef(X, Y, Z);    //
 }

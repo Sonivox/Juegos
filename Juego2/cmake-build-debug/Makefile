@@ -39,19 +39,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/sonivox/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.7479.33/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /opt/clion-2019.1.4/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/sonivox/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.7479.33/bin/cmake/linux/bin/cmake -E remove -f
+RM = /opt/clion-2019.1.4/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/sonivox/Plantillas/Juegos/Juego2
+CMAKE_SOURCE_DIR = /home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/sonivox/Plantillas/Juegos/Juego2/cmake-build-debug
+CMAKE_BINARY_DIR = /home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /home/sonivox/Plantillas/Juegos/Juego2/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/sonivox/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.7479.33/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/opt/clion-2019.1.4/bin/cmake/linux/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -70,7 +70,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/sonivox/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/191.7479.33/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/opt/clion-2019.1.4/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/sonivox/Plantillas/Juegos/Juego2/cmake-build-debug/CMakeFiles /home/sonivox/Plantillas/Juegos/Juego2/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug/CMakeFiles /home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/sonivox/Plantillas/Juegos/Juego2/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Juego2
+# Target rules for targets named Nivel2
 
 # Build rule for target.
-Juego2: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Juego2
-.PHONY : Juego2
+Nivel2: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Nivel2
+.PHONY : Nivel2
 
 # fast build rule for target.
-Juego2/fast:
-	$(MAKE) -f CMakeFiles/Juego2.dir/build.make CMakeFiles/Juego2.dir/build
-.PHONY : Juego2/fast
+Nivel2/fast:
+	$(MAKE) -f CMakeFiles/Nivel2.dir/build.make CMakeFiles/Nivel2.dir/build
+.PHONY : Nivel2/fast
 
 main.o: main.cpp.o
 
@@ -129,7 +129,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/Juego2.dir/build.make CMakeFiles/Juego2.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/Nivel2.dir/build.make CMakeFiles/Nivel2.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -138,7 +138,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/Juego2.dir/build.make CMakeFiles/Juego2.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/Nivel2.dir/build.make CMakeFiles/Nivel2.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -147,7 +147,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/Juego2.dir/build.make CMakeFiles/Juego2.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/Nivel2.dir/build.make CMakeFiles/Nivel2.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -157,7 +157,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... Juego2"
+	@echo "... Nivel2"
 	@echo "... edit_cache"
 	@echo "... main.o"
 	@echo "... main.i"
