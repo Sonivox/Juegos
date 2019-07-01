@@ -93,22 +93,7 @@ static Uint32 audio_len; // remaining length of the sample we have to play
 
 static char label[100];
 
-void dibujarCadena(char *s, double color[3], string texto, double posX, double posY) {
-    // Color del texto
-    glColor3f(color[0], color[1], color[2]);
 
-    // cadena formateada
-    sprintf(label, texto.c_str());
-
-    // posición del texto
-    glRasterPos2f(posX, posY);
-
-    // recorrido letra a letra para dibujar la cadena
-    unsigned int i;
-    for (i = 0; i < strlen(s); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
-    }
-}
 
 void display() {
 
@@ -572,27 +557,7 @@ float random_float(const float min, const float max)
 }
 
 int main(int iArgc, char** cppArgv) {
-
-
-    /*int main (int argc, char **argv)
-{
-    glutInit (&argc, argv);
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-    glutInitWindowPosition (20, 20);
-    glutInitWindowSize (600, 600);
-    IdMain = glutCreateWindow ("Ventana con Textos");
-    glutDisplayFunc (pintarventana);
-    glutReshapeFunc (tamanoventana);
-    glutKeyboardFunc (teclado);
-    glutIdleFunc (idle);
-    IdSub = glutCreateSubWindow (IdMain, 20, 20, 600 - 10, 600 / 10);
-    glutDisplayFunc (pintarsubventana);
-    glutReshapeFunc (tamanosubventana);
-    glutMainLoop ();
-    return 0;
-}*/
-
-
+    
     glutInit(&iArgc, cppArgv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(900, 600);
@@ -644,13 +609,15 @@ int main(int iArgc, char** cppArgv) {
     return 0;
 }
 
+
+// manejar audio de fondo
 void my_audio_callback(void *userdata, Uint8 *stream, int len)
 {
 
-    if (audio_len ==0)
+    if (audio_len == 0)
         return;
 
-    len = ( len > audio_len ? audio_len : len );
+    len = (len > audio_len ? audio_len : len );
 
     SDL_memcpy (stream, audio_pos, len); // Simplemente copie desde un buffer en el otro
     //SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME / 2); // Mezclar de un buffer a otro
@@ -660,6 +627,7 @@ void my_audio_callback(void *userdata, Uint8 *stream, int len)
 }
 
 
+// Manejo de la subventana y texto
 void pintarsubventana() {
     glutSetWindow(IdSub);
     glClearColor(0.7, 0.7, 0.7, 0.0);
@@ -673,11 +641,9 @@ void pintarsubventana() {
     glEnd();
 
 
-    glRasterPos2f(0.40F, 0.70F);
-    dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F}, "Texto de prubea", 0.40, 0.70);
-    /*sprintf (label, " de OpenGL creada con GLUT ");
-    glRasterPos2f (0.33F, 0.35F);
-    dibujarCadena (label);*/
+    dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
+                  "A = disparar; W = arriba; S = abajo; E = poder +; D = poder -", 0.0, 0.70);
+
     glutSwapBuffers();
 }
 
@@ -696,4 +662,19 @@ void idle(void) {
     glutPostRedisplay();
 }
 
+void dibujarCadena(char *s, double color[3], string texto, double posX, double posY) {
+    // Color del texto
+    glColor3f(color[0], color[1], color[2]);
 
+    // cadena formateada
+    sprintf(label, texto.c_str());
+
+    // posición del texto
+    glRasterPos2f(posX, posY);
+
+    // recorrido letra a letra para dibujar la cadena
+    unsigned int i;
+    for (i = 0; i < strlen(s); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+    }
+}
