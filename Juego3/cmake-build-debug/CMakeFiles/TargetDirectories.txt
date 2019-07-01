@@ -1,3 +1,0 @@
-/home/sonivox/Plantillas/Juegos/Juego3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/sonivox/Plantillas/Juegos/Juego3/cmake-build-debug/CMakeFiles/Juego3.dir
-/home/sonivox/Plantillas/Juegos/Juego3/cmake-build-debug/CMakeFiles/edit_cache.dir

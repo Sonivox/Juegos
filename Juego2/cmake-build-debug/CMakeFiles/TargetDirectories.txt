@@ -1,3 +1,0 @@
-/home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug/CMakeFiles/Nivel2.dir
-/home/robante15/RobertoDEV/OpenGL-Tests/UltimaTarea/Nivel2/cmake-build-debug/CMakeFiles/edit_cache.dir

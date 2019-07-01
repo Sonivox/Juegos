@@ -335,7 +335,7 @@ void explosion(){
 void fence(){
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "fence2.bmp",
+                    "cobblestone.bmp",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
@@ -372,7 +372,7 @@ void theSurface(){
 
     texture[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "softground.bmp",
+                    "suelo.bmp",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_MULTIPLY_ALPHA | SOIL_FLAG_COMPRESS_TO_DXT
@@ -391,9 +391,9 @@ void theSurface(){
     glBegin(GL_QUADS);
     glNormal3f(0.0f, 0.0f, 1.0f);
     glColor3f(1.0, 1.0, 1.0);
-    glTexCoord2f(0, 1);glVertex3f(-5.0, -0.4, 0.0);
-    glTexCoord2f(4, 1);glVertex3f(15.0, -0.4, 0.0);
-    glTexCoord2f(4, 0);glVertex3f(15.0, -5.0, 0.0);
+    glTexCoord2f(0, 4);glVertex3f(-5.0, -0.4, 0.0);
+    glTexCoord2f(16, 4);glVertex3f(15.0, -0.4, 0.0);
+    glTexCoord2f(16, 0);glVertex3f(15.0, -5.0, 0.0);
     glTexCoord2f(0, 0);glVertex3f(-5.0, -5.0, 0.0);
     glEnd();
 
@@ -555,7 +555,7 @@ void theCalculate(){
 }
 
 void Initialize() {
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(0.046f, 0.714f, 0.945f, 0.5f);
 
     glMatrixMode(GL_PROJECTION);
     gluPerspective(45.0, 2.00, 1.0, 200.0);
