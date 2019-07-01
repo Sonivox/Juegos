@@ -557,27 +557,7 @@ float random_float(const float min, const float max)
 }
 
 int main(int iArgc, char** cppArgv) {
-
-
-    /*int main (int argc, char **argv)
-{
-    glutInit (&argc, argv);
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-    glutInitWindowPosition (20, 20);
-    glutInitWindowSize (600, 600);
-    IdMain = glutCreateWindow ("Ventana con Textos");
-    glutDisplayFunc (pintarventana);
-    glutReshapeFunc (tamanoventana);
-    glutKeyboardFunc (teclado);
-    glutIdleFunc (idle);
-    IdSub = glutCreateSubWindow (IdMain, 20, 20, 600 - 10, 600 / 10);
-    glutDisplayFunc (pintarsubventana);
-    glutReshapeFunc (tamanosubventana);
-    glutMainLoop ();
-    return 0;
-}*/
-
-
+    
     glutInit(&iArgc, cppArgv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(900, 600);
