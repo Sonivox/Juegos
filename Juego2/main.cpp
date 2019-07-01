@@ -4,12 +4,11 @@
 #include <SOIL/SOIL.h>
 #include <SDL2/SDL.h>
 #include <iostream>
-#include "SDL2/SDL_mixer.h"
+//#include "SDL2/SDL_mixer.h"
 
 #include <stdlib.h>
 #include <time.h>
 
-#define RUTA_AUDIO "resources/audio/sweden.wav"
 
 void suelo();
 void torre();
@@ -58,6 +57,32 @@ GLuint texture[0];
 GLfloat LightAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
 GLfloat LightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 GLfloat LightPosition[] = {1.0f, 1.0f, 1.0f, 0.0f};
+
+
+
+//#define RUTA_AUDIO "resources/audio/sweden.wav"
+//ruta especifica del audio a sonar por defecto ponela en cmake-build-debug
+#define RUTA_AUDIO "Fuse Box.wav"
+
+// variables para audio
+static Uint8 *audio_pos; // global pointer to the audio buffer to be played
+static Uint32 audio_len; // remaining length of the sample we have to play
+
+void my_audio_callback(void *userdata, Uint8 *stream, int len)
+{
+
+    if (audio_len ==0)
+        return;
+
+    len = ( len > audio_len ? audio_len : len );
+
+    SDL_memcpy (stream, audio_pos, len); // Simplemente copie desde un buffer en el otro
+    //SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME / 2); // Mezclar de un buffer a otro
+
+    audio_pos += len;
+    audio_len -= len;
+}
+
 
 void init(void) {
     //Carga la textura
@@ -1231,6 +1256,11 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
+
+    //REPRODUCIR EL AUDIO
+    SDL_PauseAudio(false);
+
+
     glLoadIdentity();
     //Transladar el cubo a las siguientes coordenadas
     glTranslatef(0.0f, 0.0f, -5.5f);
@@ -1569,13 +1599,13 @@ void update(int value) {
 
 int main(int argc, char *argv[]) {
 
-    if( SDL_Init(SDL_INIT_AUDIO) < 0 ) exit(1);
+    /*if( SDL_Init(SDL_INIT_AUDIO) < 0 ) exit(1);
     // Setup audio mode
     Mix_OpenAudio(22050,AUDIO_S16SYS,2,640);
     Mix_Music *mus;  // Background Music
 
     mus = Mix_LoadMUS(RUTA_AUDIO);
-    Mix_PlayMusic(mus,1); //Music loop=1
+    Mix_PlayMusic(mus,1); //Music loop=1 */
 
     //  Inicializar los parámetros GLUT y de usuario proceso
     glutInit(&argc, argv);
@@ -1594,6 +1624,39 @@ int main(int argc, char *argv[]) {
     // Funciones de retrollamada
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
+
+    // sonido
+    // Inicializar SDL.
+
+
+    // Variables locales
+    static Uint32 wav_length; // Longitud de nuestra muestra
+    static Uint8 *wav_buffer; // Buffer que contiene nuestro archivo de audio
+    static SDL_AudioSpec wav_spec; // Las especificaciones de nuestra pieza de música
+
+    /* Cargar el WAV */
+    // Las especificaciones, la longitud y el búfer de nuestro wav se llenan
+    if( SDL_LoadWAV(RUTA_AUDIO, &wav_spec, &wav_buffer, &wav_length) == NULL )
+    {
+
+    }
+    // Establecer la función de devolución de llamada
+    wav_spec.callback = my_audio_callback;
+    wav_spec.userdata = NULL;
+
+    // Establecer nuestras variables estáticas globales
+    audio_pos = wav_buffer; // Copia el buffer de sonido
+    audio_len = wav_length; // Copia la longitud del archivo
+
+    /*Abrir el dispositivo de audio */
+    if ( SDL_OpenAudio(&wav_spec, NULL) < 0 )
+    {
+        fprintf(stderr, "No se pudo abrir el audio: %s\n", SDL_GetError());
+        exit(-1);
+    }
+
+
+
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKeys);
     //glutTimerFunc(30, update, 0);

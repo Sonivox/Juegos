@@ -47,6 +47,8 @@ include_directories(/usr/include/SOIL)
 link_directories(/usr/lib/SOIL)
 include_directories(/usr/include/SDL2)
 
+
+
 # creating executable "3D"
 add_executable(Nivel2 main.cpp)
 
