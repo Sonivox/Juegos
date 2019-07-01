@@ -40,7 +40,7 @@ int IdMain; // ventana principal
 int IdSub; // ventana secundaria
 static char label[100]; // variable que se recorre para el texto
 double rotate_y = 0;
-double rotate_x = 0;
+double rotate_x = 35;
 double rotate_z = 0;
 
 GLfloat X = 0.0f;
@@ -1312,15 +1312,15 @@ void display() {
     glTranslatef(PosObj1X*-1, PosObj1Y*-1, PosObj1Z*-1);
 
     glTranslatef(PosObj2X, PosObj2Y, PosObj2Z);
-    glScalef(0.5f,0.5f,0.5f);
+    glScalef(0.8f,0.8f,0.8f);
     glCallList(ListObjeto2);
-    glScalef(2.0f,2.0f,2.0f);
+    glScalef(1.25f,1.25f,1.25f);
     glTranslatef(PosObj2X*-1, PosObj2Y*-1, PosObj2Z*-1);
 
     glTranslatef(PosObj3X, PosObj3Y, PosObj3Z);
-    glScalef(0.5f,0.5f,0.5f);
+    glScalef(0.4f,0.4f,0.4f);
     glCallList(ListObjeto3);
-    glScalef(2.0f,2.0f,2.0f);
+    glScalef(2.5f,2.5f,2.5f);
     glTranslatef(PosObj3X*-1, PosObj3Y*-1, PosObj3Z*-1);
 
 
@@ -1399,6 +1399,17 @@ void updateFrame() {
         PosObj3Y = PosObj3Y -= 0.5;
         //std::cout << PosObj1Y << std::endl;
     }
+
+    if((PosObj3X >= -1*PosPersoX-5) && (PosObj3X <= -1*PosPersoX+5) || (PosObj2X >= -1*PosPersoX-5) && (PosObj2X <= -1*PosPersoX+5) || (PosObj1X >= -1*PosPersoX-5) && (PosObj1X <= -1*PosPersoX+5)){
+        //std::cout << "Impacto" << std::endl;
+        if(frameNumber >= 16){
+            PosPersoY-=2.5;
+        }
+    }
+
+    std::cout << "PosObj: " << PosObj1X << std::endl;
+    std::cout << "PosPerso: " << PosPersoX << std::endl;
+
     //Verificamos el numero de frames para detener animación
     if(frameNumber==25)
     {
@@ -1407,7 +1418,7 @@ void updateFrame() {
     }
     //Almacenamos el numero de frames
     frameNumber++;
-    printf ("Numero de Frame: %d \n", frameNumber);
+    //printf ("Numero de Frame: %d \n", frameNumber);
 }
 
 void timerFunction(int timerID) {
@@ -1431,9 +1442,10 @@ void startAnimation() {
 void keyboard(unsigned char key, int x, int y) {
     //control de teclas que hacen referencia a Escalar y transladar el cubo en los ejes X,Y,Z.
     GLfloat temp;
+    int posRand2;
     switch (key) {
         case 'w':
-            if (RotPersoAngle != 180) {
+            /*if (RotPersoAngle != 180) {
 
                 //Corrige las coordenadas cuando proviene de 270
                 if (RotPersoAngle == 270) {
@@ -1454,7 +1466,7 @@ void keyboard(unsigned char key, int x, int y) {
                 PosPersoX *= -1;
                 PosPersoZ *= -1;
             }
-            PosPersoZ += step;
+            PosPersoZ += step;*/
             break;
 
         case 'a':
@@ -1486,7 +1498,7 @@ void keyboard(unsigned char key, int x, int y) {
 
         case 's' :
 
-            if (RotPersoAngle != 0) {
+            /*if (RotPersoAngle != 0) {
 
                 //Corrige las coordenadas cuando proviene de 270
                 if (RotPersoAngle == 270) {
@@ -1507,7 +1519,7 @@ void keyboard(unsigned char key, int x, int y) {
                 PosPersoX *= -1;
                 PosPersoZ *= -1;
             }
-            PosPersoZ += step;
+            PosPersoZ += step;*/
             break;
 
         case '1':
@@ -1515,26 +1527,42 @@ void keyboard(unsigned char key, int x, int y) {
             PosObj2Y = 280.0f;
             PosObj3Y = 80.0f;
             PosObj3X = 0.0f;
+            PosPersoY = 13.5f;
+            srand(time(NULL));
+            posRand2 = 1 + rand() % (90 - 1);
+            PosPersoX = (posRand2 - 45) * - 1;
             break;
         case '2':
             PosObj1Y = 80.0f;
             PosObj1X = 0.0f;
             PosObj2Y = 280.0f;
             PosObj3Y = 280.0f;
+            PosPersoY = 13.5f;
+            srand(time(NULL));
+            posRand2 = 1 + rand() % (90 - 1);
+            PosPersoX = (posRand2 - 45) * - 1;
             break;
         case '3':
             PosObj1Y = 280.0f;
             PosObj2Y = 80.0f;
             PosObj2X = 0.0f;
             PosObj3Y = 280.0f;
+            PosPersoY = 13.5f;
+            srand(time(NULL));
+            posRand2 = 1 + rand() % (90 - 1);
+            PosPersoX = (posRand2 - 45) * - 1;
             break;
 
         case 'r':
             PosObj1X = 0.0f; PosObj1Y = 80.0f; PosObj1Z = 15.0f;
             PosObj2X = 40.0f; PosObj2Y = 80.0f; PosObj2Z = 15.0f;
             PosObj3X = -40.0f; PosObj3Y = 80.0f; PosObj3Z = 15.0f;
-            break;
+            PosPersoY = 13.5f;
+            srand(time(NULL));
+            posRand2 = 1 + rand() % (90 - 1);
+            PosPersoX = (posRand2 - 45) * - 1;
 
+            break;
         case 'd' :
             PosObj1X += 1;
             PosObj2X += 1;
@@ -1585,6 +1613,9 @@ void keyboard(unsigned char key, int x, int y) {
             Z += 0.1f;
             break;
         case '?':
+            std::cout << "Rotate X: " << rotate_x << std::endl;
+            std::cout << "Rotate Y: " << rotate_y << std::endl;
+            std::cout << "Rotate Z: " << rotate_z << std::endl;
             std::cout << "X: " << X << std::endl;
             std::cout << "Y: " << Y << std::endl;
             std::cout << "Z: " << Z << std::endl;
@@ -1711,11 +1742,11 @@ void pintarsubventana() {
 
 
     dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
-                  "Todo el texto que necesiten va aqui", 0.0, 0.70);
+                  "Con los botones 1, 2, 3, puedes seleccionar diferentes objetos", 0.0, 0.70);
 
     // para un "salto de linea hay que cambiar el valor de Y
     dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
-                  "Todo el texto que necesiten va aqui", 0.0, 0.30);
+                  "Para lanzar los objetos presiona Espacio", 0.0, 0.30);
 
     glutSwapBuffers();
 }

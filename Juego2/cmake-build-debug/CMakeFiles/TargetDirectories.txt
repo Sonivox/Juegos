@@ -1,3 +1,3 @@
-/home/striker/CLionProjects/Juegos/Juego2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/striker/CLionProjects/Juegos/Juego2/cmake-build-debug/CMakeFiles/Nivel2.dir
-/home/striker/CLionProjects/Juegos/Juego2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/robante15/RobertoDEV/Juegos/Juego2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/robante15/RobertoDEV/Juegos/Juego2/cmake-build-debug/CMakeFiles/Nivel2.dir
+/home/robante15/RobertoDEV/Juegos/Juego2/cmake-build-debug/CMakeFiles/edit_cache.dir
