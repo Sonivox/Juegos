@@ -62,7 +62,7 @@ GLfloat LightPosition[] = {1.0f, 1.0f, 1.0f, 0.0f};
 
 //#define RUTA_AUDIO "resources/audio/sweden.wav"
 //ruta especifica del audio a sonar por defecto ponela en cmake-build-debug
-#define RUTA_AUDIO "Fuse Box.wav"
+#define RUTA_AUDIO "sweden.wav"
 
 // variables para audio
 static Uint8 *audio_pos; // global pointer to the audio buffer to be played
@@ -1503,17 +1503,27 @@ void keyboard(unsigned char key, int x, int y) {
             PosObj1Y = 280.0f;
             PosObj2Y = 280.0f;
             PosObj3Y = 80.0f;
+            PosObj3X = 0.0f;
             break;
         case '2':
             PosObj1Y = 80.0f;
+            PosObj1X = 0.0f;
             PosObj2Y = 280.0f;
             PosObj3Y = 280.0f;
             break;
         case '3':
             PosObj1Y = 280.0f;
             PosObj2Y = 80.0f;
+            PosObj2X = 0.0f;
             PosObj3Y = 280.0f;
             break;
+
+        case 'r':
+            PosObj1X = 0.0f; PosObj1Y = 80.0f; PosObj1Z = 15.0f;
+            PosObj2X = 40.0f; PosObj2Y = 80.0f; PosObj2Z = 15.0f;
+            PosObj3X = -40.0f; PosObj3Y = 80.0f; PosObj3Z = 15.0f;
+            break;
+
         case 'd' :
             PosObj1X += 1;
             PosObj2X += 1;
