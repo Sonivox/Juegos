@@ -1,4 +1,4 @@
-/opt/clion-2019.1.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/robante15/RobertoDEV/Juegos/Juego2
+/home/marcopolo/Programas/clion-2018.3.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/marcopolo/CLionProjects/Juegos/Juego2
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/robante15/RobertoDEV/Juegos/Juego2/cmake-build-debug
+-- Build files have been written to: /home/marcopolo/CLionProjects/Juegos/Juego2/cmake-build-debug

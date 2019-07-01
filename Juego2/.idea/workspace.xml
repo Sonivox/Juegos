@@ -11,7 +11,28 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba13377e-4f2a-42a0-888f-71079abc67dd" name="Default Changelist" comment="" />
+    <list default="true" id="ba13377e-4f2a-42a0-888f-71079abc67dd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Juego1/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego1/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego1/cmake-build-debug/Juego1" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego1/cmake-build-debug/Juego1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego1/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego1/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Nivel2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Nivel2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Nivel2.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Nivel2.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/cmake-build-debug/Juego3" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/cmake-build-debug/Juego3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego3/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego3/pue.jpg" beforeDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +49,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="35" selection-start-line="1" selection-start-column="35" selection-end-line="1" selection-end-column="35" />
+            <state relative-caret-position="500">
+              <caret line="56" column="103" selection-start-line="56" selection-start-column="103" selection-end-line="56" selection-end-column="103" />
             </state>
           </provider>
         </entry>
@@ -37,8 +58,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="1535" column="29" selection-start-line="1535" selection-start-column="29" selection-end-line="1535" selection-end-column="29" />
+            <state relative-caret-position="-2985">
+              <caret line="11" column="2" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
                 <element signature="e#155#174#0" expanded="true" />
@@ -65,36 +86,22 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="419" />
-    <option name="y" value="230" />
-    <option name="width" value="894" />
-    <option name="height" value="486" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="1003" />
+    <option name="width" value="857" />
+    <option name="height" value="1028" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Nivel2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Juego2" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Juego1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Juego3" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
@@ -135,21 +142,23 @@
       <workItem from="1561966396421" duration="974000" />
       <workItem from="1561970041940" duration="361000" />
       <workItem from="1561998205824" duration="46000" />
+      <workItem from="1562010145494" duration="2346000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18531000" />
+    <option name="totallyTimeSpent" value="20877000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="0" width="1922" height="1051" extended-state="6" />
+    <frame x="0" y="0" width="1920" height="1042" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4967742" weight="0.23585913" />
-      <window_info id="Structure" order="1" sideWeight="0.5032258" side_tool="true" visible="true" weight="0.23852721" />
+      <window_info id="Structure" order="1" sideWeight="0.5032258" side_tool="true" visible="true" weight="0.2411953" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32535365" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3249453" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3273684" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -158,8 +167,8 @@
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32840723" />
-      <window_info anchor="bottom" id="CMake" order="11" weight="0.32840723" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.3966942" />
+      <window_info anchor="bottom" id="CMake" order="11" weight="0.32822758" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.39606127" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -172,15 +181,15 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="35" selection-start-line="1" selection-start-column="35" selection-end-line="1" selection-end-column="35" />
+        <state relative-caret-position="500">
+          <caret line="56" column="103" selection-start-line="56" selection-start-column="103" selection-end-line="56" selection-end-column="103" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="1535" column="29" selection-start-line="1535" selection-start-column="29" selection-end-line="1535" selection-end-column="29" />
+        <state relative-caret-position="-2985">
+          <caret line="11" column="2" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
             <element signature="e#155#174#0" expanded="true" />

@@ -16,7 +16,7 @@
  *    JUEGO DE CAÑON (TIRO PARABOLICO)
  *           - ROBERTO HERBERTH MALTEZ GUARDADO - MG16071
  *           - ROBERTO ANTONIO ORTIZ ACEVEDO    - OA14002
- *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM160
+ *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM16014
  *           - FERNANDO ROMAN VENTURA ALVARADO  - VA16001
  *
  * */
@@ -104,7 +104,7 @@ void display() {
     glMatrixMode(GL_MODELVIEW);
 
 
-    //SDL_PauseAudio(false); //reproducir el audiow
+    SDL_PauseAudio(false); //reproducir el audiow
 
     glLoadIdentity(); // se carga la matrix de identidad
 

@@ -13,10 +13,9 @@ using namespace std;
  *       UNIVERSIDAD DE EL SALVADOR
  *        ALGORITMOS GRAFICOS 2019
  *
- *    JUEGO DE CAÑON (TIRO PARABOLICO)
  *           - ROBERTO HERBERTH MALTEZ GUARDADO - MG16071
  *           - ROBERTO ANTONIO ORTIZ ACEVEDO    - OA14002
- *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM160
+ *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM16014
  *           - FERNANDO ROMAN VENTURA ALVARADO  - VA16001
  *
  * */
@@ -119,7 +118,7 @@ int main(int argc, char *argv[]) {
 }
 
 int score = 0;
-int nece = 5;
+int nece = 10;
 bool gano = false;
 
 
@@ -301,7 +300,7 @@ void ariete(){
     }
 
     //animacion al llegar a 15 puntos
-    if(score == 5){
+    if(score == 10){
         abrirPuerta = true;
         gano = true;
 
@@ -314,6 +313,9 @@ void ariete(){
 
 // all drawings here
 void display() {
+
+    glClearColor(0.1,0.9,1,1);
+
     translateRotate(); // put this function before each drawing you make.
     xyz();
     Instruccion();
@@ -373,8 +375,8 @@ void puerta(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_BLEND);
+  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     glBegin(GL_QUADS);
@@ -417,8 +419,8 @@ void puerta(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //puerta
     if (abrirPuerta == true){
@@ -430,7 +432,7 @@ void puerta(){
         glTexCoord2f(1, 1);glVertex3f(1.0, -20.0, 50.0);
         glTexCoord2f(0, 1);glVertex3f(1.0, 20.0, 50.0);
         glTexCoord2f(0, 0);glVertex3f(1.0, 20.0, 00.0);
-       
+
         glEnd();
 
 
@@ -465,7 +467,7 @@ void paredes(){
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
             );
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, pared[0]);
+    //glBindTexture(GL_TEXTURE_2D, pared[0]);
     //parametros
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -473,7 +475,7 @@ void paredes(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //pared
     glBegin(GL_QUADS);
@@ -536,13 +538,13 @@ void xyz() {
     // up or down or zoom in zoom out
     // Draw the positive side of the lines x,y,z
     glBegin(GL_LINES);
-    glColor3f(0.0, 1.0, 0.0); // Green for x axis
+    glColor3f(0.0, 0.0, 0.0); // Blue for z axis
     glVertex3f(0, 0, 0);
     glVertex3f(10 * ortho, 0, 0);
-    glColor3f(1.0, 0.0, 0.0); // Red for y axis
+    glColor3f(0.0, 0.0, 0.0); // Blue for z axis
     glVertex3f(0, 0, 0);
     glVertex3f(0, 10 * ortho, 0);
-    glColor3f(0.0, 0.0, 1.0); // Blue for z axis
+    glColor3f(0.0, 0.0, 0.0); // Blue for z axis
     glVertex3f(0, 0, 0);
     glVertex3f(0, 0, 10 * ortho);
 
@@ -553,13 +555,13 @@ void xyz() {
     // dotted pattern for the lines
     glLineStipple(1, 0x0101);    // Dotted stipple pattern for the lines
     glBegin(GL_LINES);
-    glColor3f(0.0, 1.0, 0.0);    // Green for x axis
+    glColor3f(0.0, 0.0, 0.0); // Blue for z axis
     glVertex3f(-10 * ortho, 0, 0);
     glVertex3f(0, 0, 0);
-    glColor3f(1.0, 0.0, 0.0);    // Red for y axis
+    glColor3f(0.0, 0.0, 0.0); // Blue for z axis
     glVertex3f(0, 0, 0);
     glVertex3f(0, -10 * ortho, 0);
-    glColor3f(0.0, 0.0, 1.0);    // Blue for z axis
+    glColor3f(0.0, 0.0, 0.0); // Blue for z axis
     glVertex3f(0, 0, 0);
     glVertex3f(0, 0, -10 * ortho);
 

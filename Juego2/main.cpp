@@ -6,6 +6,17 @@
 #include <iostream>
 //#include "SDL2/SDL_mixer.h"
 
+/*
+ *       UNIVERSIDAD DE EL SALVADOR
+ *        ALGORITMOS GRAFICOS 2019
+ *
+ *           - ROBERTO HERBERTH MALTEZ GUARDADO - MG16071
+ *           - ROBERTO ANTONIO ORTIZ ACEVEDO    - OA14002
+ *           - EDWIN OSMIN ORELLANA MARTINEZ    - OM16014
+ *           - FERNANDO ROMAN VENTURA ALVARADO  - VA16001
+ *
+ * */
+
 #include <stdlib.h>
 #include <time.h>
 
@@ -1746,7 +1757,7 @@ void pintarsubventana() {
 
     // para un "salto de linea hay que cambiar el valor de Y
     dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
-                  "Para lanzar los objetos presiona Espacio", 0.0, 0.30);
+                  "Para lanzar los objetos presiona Espacio. Para recargar presiona r", 0.0, 0.30);
 
     glutSwapBuffers();
 }
