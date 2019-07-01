@@ -119,17 +119,55 @@ int main(int argc, char *argv[]) {
 }
 
 int score = 0;
+int nece = 5;
+bool gano = false;
+
 
 void Score(double a){
     char text[255];
     //sprintf(text, "X:%.0f Y:%.0f", xrot, yrot);
     sprintf(text, "SCORE = %.0f", a);
     glColor3f(1, 1, 1);
-    glRasterPos3f(120 , 140, 100);
+    glRasterPos3f(60 , 140, 100);
     for(int i = 0; text[i] != '\0'; i++) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
     }
 }
+
+void Instruccion (){
+    char texto[255];
+    sprintf(texto,"TECLADO --> LANZAR:  J          RECARGAR:  L.");
+    glColor3f(1, 1, 1);
+    glRasterPos3f(60 , 180, 100);
+    for(int i = 0; texto[i] != '\0'; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[i]);
+    }
+}
+
+
+void mensajeGanar(bool exito){
+    char texto[255];
+    sprintf(texto,"¡¡¡LO LOGRASTE!!! ");
+    if (exito==true){
+        glColor3f(255, 255, 255);
+        glRasterPos3f(60 , 130, 100);
+        for(int i = 0; texto[i] != '\0'; i++) {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[i]);
+        }
+    }
+}
+
+void necesidad(double r){
+    char text[255];
+    //sprintf(text, "X:%.0f Y:%.0f", xrot, yrot);
+    sprintf(text, "GOLPES NECESARIOS PARA  BATIR LA PUERTA = %.0f", r);
+    glColor3f(1, 1, 1);
+    glRasterPos3f(60 , 170, 100);
+    for(int i = 0; text[i] != '\0'; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+    }
+}
+
 
 //ariete
 bool golpe = false;
@@ -233,7 +271,7 @@ void ariete(){
     GLfloat r = 10;
     GLfloat h = 120;
 
-    // cylinder that is to be textured…
+
 
     if(presionado == false && velocidad >= 2){
         golpe = true;
@@ -247,6 +285,7 @@ void ariete(){
             distancia = 0;
             golpe = false;
             score++;
+            nece--;
             presionado = true;
             velocidad = 0;
         }
@@ -257,12 +296,15 @@ void ariete(){
         cout << "distancia " << distancia << endl;
     } else{
         glTranslatef(150,0,50);
+
         glutSolidSphere(r,h,h);
     }
 
     //animacion al llegar a 15 puntos
-    if(score == 1){
+    if(score == 5){
         abrirPuerta = true;
+        gano = true;
+
     }
 
 }
@@ -274,6 +316,9 @@ void ariete(){
 void display() {
     translateRotate(); // put this function before each drawing you make.
     xyz();
+    Instruccion();
+    mensajeGanar(gano);
+    necesidad(nece);
     Score(score);
     barra();
     SDL_PauseAudio(false); //reproducir el audio
@@ -336,30 +381,30 @@ void puerta(){
     glColor4f(1, 1, 1, 1);
     glNormal3f( 1.0f, 1.0f,1.0f);
     //pared izquierda
-    glTexCoord2f(1,1); glVertex3f(10.0, -20.0, 100.0);
-    glTexCoord2f(0,1); glVertex3f(-10.0, -20.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(-10.0, -20.0, 0.0);
-    glTexCoord2f(1,0); glVertex3f(10.0, -20.0, 0.0);
+    glTexCoord2f(1,1); glVertex3f(5.0, -20.0, 100.0);
+    glTexCoord2f(0,1); glVertex3f(-5.0, -20.0, 100.0);
+    glTexCoord2f(0,0); glVertex3f(-5.0, -20.0, 0.0);
+    glTexCoord2f(1,0); glVertex3f(5.0, -20.0, 0.0);
     //pared derecha
-    glTexCoord2f(1,1); glVertex3f(10.0, 20.0, 100.0);
-    glTexCoord2f(0,1); glVertex3f(-10.0, 20.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(-10.0, 20.0, 0.0);
-    glTexCoord2f(1,0); glVertex3f(10.0, 20.0, 0.0);
+    glTexCoord2f(1,1); glVertex3f(5.0, 20.0, 100.0);
+    glTexCoord2f(0,1); glVertex3f(-5.0, 20.0, 100.0);
+    glTexCoord2f(0,0); glVertex3f(-5.0, 20.0, 0.0);
+    glTexCoord2f(1,0); glVertex3f(5.0, 20.0, 0.0);
     //abajo
-    glTexCoord2f(1,0); glVertex3f(10.0, -20.0, 0.0);
-    glTexCoord2f(1,1); glVertex3f(-10.0, -20.0, 0.0);
-    glTexCoord2f(0,1); glVertex3f(-10.0, 20.0, 0.0);
-    glTexCoord2f(0,0); glVertex3f(10.0, 20.0, 0.0);
+    glTexCoord2f(1,0); glVertex3f(5.0, -20.0, 0.0);
+    glTexCoord2f(1,1); glVertex3f(-5.0, -20.0, 0.0);
+    glTexCoord2f(0,1); glVertex3f(-5.0, 20.0, 0.0);
+    glTexCoord2f(0,0); glVertex3f(5.0, 20.0, 0.0);
     //arriba
-    glTexCoord2f(1,0); glVertex3f(10.0, -20.0, 100.0);
-    glTexCoord2f(1,1); glVertex3f(-10.0, -20.0, 100.0);
-    glTexCoord2f(0,1); glVertex3f(-10.0, 20.0, 100.0);
-    glTexCoord2f(0,0); glVertex3f(10.0, 20.0, 100.0);
+    glTexCoord2f(1,0); glVertex3f(5.0, -20.0, 100.0);
+    glTexCoord2f(1,1); glVertex3f(-5.0, -20.0, 100.0);
+    glTexCoord2f(0,1); glVertex3f(-5.0, 20.0, 100.0);
+    glTexCoord2f(0,0); glVertex3f(5.0, 20.0, 100.0);
     glEnd();
 
     puertaT[0] = SOIL_load_OGL_texture // cargamos la imagen
             (
-                    "puerta.bmp",
+                    "pue.jpg",
                     SOIL_LOAD_AUTO,
                     SOIL_CREATE_NEW_ID,
                     SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
@@ -377,19 +422,15 @@ void puerta(){
 
     //puerta
     if (abrirPuerta == true){
-        glRotatef(90,0,0,1);
+        glRotatef(270,0,1,0);
         glBegin(GL_QUADS);
         glColor4f(1, 1, 1, 1);
         glNormal3f( 1.0f, 1.0f,1.0f);
-        glTexCoord2f(1, 0);glVertex3f(10.0, -20.0, 0.0);
-        glTexCoord2f(1, 1);glVertex3f(10.0, -20.0, 100.0);
-        glTexCoord2f(0, 1);glVertex3f(10.0, 20.0, 100.0);
-        glTexCoord2f(0, 0);glVertex3f(10.0, 20.0, 00.0);
-        //puerta adelante
-        glTexCoord2f(1, 0);glVertex3f(-10.0, -20.0, 0.0);
-        glTexCoord2f(1, 1);glVertex3f(-10.0, -20.0, 100.0);
-        glTexCoord2f(0, 1);glVertex3f(-10.0, 20.0, 100.0);
-        glTexCoord2f(0, 0);glVertex3f(-10.0, 20.0, 00.0);
+        glTexCoord2f(1, 0);glVertex3f(1.0, -20.0, 0.0);
+        glTexCoord2f(1, 1);glVertex3f(1.0, -20.0, 50.0);
+        glTexCoord2f(0, 1);glVertex3f(1.0, 20.0, 50.0);
+        glTexCoord2f(0, 0);glVertex3f(1.0, 20.0, 00.0);
+       
         glEnd();
 
 
@@ -399,15 +440,18 @@ void puerta(){
     glBegin(GL_QUADS);
     glColor4f(1, 1, 1, 1);
     glNormal3f( 1.0f, 1.0f,1.0f);
-    glTexCoord2f(1, 0);glVertex3f(10.0, -20.0, 0.0);
-    glTexCoord2f(1, 1);glVertex3f(10.0, -20.0, 100.0);
-    glTexCoord2f(0, 1);glVertex3f(10.0, 20.0, 100.0);
-    glTexCoord2f(0, 0);glVertex3f(10.0, 20.0, 00.0);
+    glTexCoord2f(1, 0);glVertex3f(5.0, -20.0, 0.0);
+    glTexCoord2f(1, 1);glVertex3f(5.0, -20.0, 100.0);
+    glTexCoord2f(0, 1);glVertex3f(5.0, 20.0, 100.0);
+    glTexCoord2f(0, 0);glVertex3f(5.0, 20.0, 00.0);
     //puerta adelante
-    glTexCoord2f(1, 0);glVertex3f(-10.0, -20.0, 0.0);
-    glTexCoord2f(1, 1);glVertex3f(-10.0, -20.0, 100.0);
-    glTexCoord2f(0, 1);glVertex3f(-10.0, 20.0, 100.0);
-    glTexCoord2f(0, 0);glVertex3f(-10.0, 20.0, 00.0);
+    glTexCoord2f(1, 0);glVertex3f(-5.0, -20.0, 0.0);
+    glTexCoord2f(1, 1);glVertex3f(-5.0, -20.0, 100.0);
+    glTexCoord2f(0, 1);glVertex3f(-5.0, 20.0, 100.0);
+    glTexCoord2f(0, 0);glVertex3f(-5.0, 20.0, 00.0);
+
+
+
     glEnd();
     }
 }
@@ -436,15 +480,29 @@ void paredes(){
     glColor4f(1, 1, 1, 1);
     glNormal3f( 1.0f, 1.0f,1.0f);
     //pared atras
-    glTexCoord2f(5,0); glVertex3f(5.0, -300.0, 0.0);
-    glTexCoord2f(5,5); glVertex3f(5.0, -300.0, 100.0);
+    glTexCoord2f(5,0); glVertex3f(5.0, 20.0, 0.0);
+    glTexCoord2f(5,5); glVertex3f(5.0, 20.0, 100.0);
     glTexCoord2f(0,5); glVertex3f(5.0, 300.0, 100.0);
     glTexCoord2f(0,0); glVertex3f(5.0, 300.0, 00.0);
+
+    glTexCoord2f(5,0); glVertex3f(5.0, -20.0, 0.0);
+    glTexCoord2f(5,5); glVertex3f(5.0, -20.0, 100.0);
+    glTexCoord2f(0,5); glVertex3f(5.0, -300.0, 100.0);
+    glTexCoord2f(0,0); glVertex3f(5.0, -300.0, 00.0);
+
+
+
     //pared adelante
-    glTexCoord2f(5,0); glVertex3f(-5.0, -300.0, 0.0);
-    glTexCoord2f(5,5); glVertex3f(-5.0, -300.0, 100.0);
+    glTexCoord2f(5,0); glVertex3f(-5.0, 20.0, 0.0);
+    glTexCoord2f(5,5); glVertex3f(-5.0, 20.0, 100.0);
     glTexCoord2f(0,5); glVertex3f(-5.0, 300.0, 100.0);
     glTexCoord2f(0,0); glVertex3f(-5.0, 300.0, 00.0);
+
+    glTexCoord2f(5,0); glVertex3f(-5.0, -20.0, 0.0);
+    glTexCoord2f(5,5); glVertex3f(-5.0, -20.0, 100.0);
+    glTexCoord2f(0,5); glVertex3f(-5.0, -300.0, 100.0);
+    glTexCoord2f(0,0); glVertex3f(-5.0, -300.0, 00.0);
+
     //pared izquierda
     glTexCoord2f(5,5); glVertex3f(5.0, -300.0, 100.0);
     glTexCoord2f(0,5); glVertex3f(-5.0, -300.0, 100.0);
