@@ -12,14 +12,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a1035250-4ccd-408f-98b2-aa15562fbae2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cannon.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/castle.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/enemy.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/fire.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/rules.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/softground.bmp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/Nivel2" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/Nivel2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/cmake-build-debug/Nivel2.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/cmake-build-debug/Nivel2.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Juego2/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Juego2/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,8 +47,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="199" column="7" selection-start-line="199" selection-start-column="4" selection-end-line="199" selection-end-column="7" />
+            <state relative-caret-position="369">
+              <caret line="606" column="38" lean-forward="true" selection-start-line="603" selection-start-column="4" selection-end-line="606" selection-end-column="38" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -82,10 +83,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="70" />
-    <option name="y" value="20" />
-    <option name="width" value="1198" />
-    <option name="height" value="678" />
+    <option name="x" value="419" />
+    <option name="y" value="230" />
+    <option name="width" value="894" />
+    <option name="height" value="486" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -93,7 +94,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -110,6 +110,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -167,6 +168,7 @@
       <workItem from="1561949206235" duration="4868000" />
       <workItem from="1561957057311" duration="2847000" />
       <workItem from="1561960070660" duration="4404000" />
+      <workItem from="1561970027101" duration="375000" />
     </task>
     <task id="LOCAL-00001" summary="Subventana en juego 1">
       <created>1561953032661</created>
@@ -193,12 +195,13 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29250000" />
+    <option name="totallyTimeSpent" value="29625000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="70" y="27" width="1296" height="741" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.256" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -233,9 +236,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/imageloader.h" />
     <entry file="file://$PROJECT_DIR$/imageloader.cpp" />
-    <entry file="file://$PROJECT_DIR$/cmake-build-debug/rules.bmp">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/rules.bmp" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="525">
@@ -245,8 +246,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="199" column="7" selection-start-line="199" selection-start-column="4" selection-end-line="199" selection-end-column="7" />
+        <state relative-caret-position="369">
+          <caret line="606" column="38" lean-forward="true" selection-start-line="603" selection-start-column="4" selection-end-line="606" selection-end-column="38" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

@@ -10,6 +10,8 @@
 #include <time.h>
 
 
+using namespace std;
+
 void suelo();
 void torre();
 void puente();
@@ -24,10 +26,19 @@ void objeto1();
 void objeto2();
 void objeto3();
 
+// segunda ventana
+void pintarsubventana();
+void tamanosubventana(int w, int h);
+void idle(void);
+void dibujarCadena(char *s, double color[3], string texto, double posX, double posY);
+
 int animating = 0;
 int frameNumber; // Numero de frames
 
 //Definimos variables
+int IdMain; // ventana principal
+int IdSub; // ventana secundaria
+static char label[100]; // variable que se recorre para el texto
 double rotate_y = 0;
 double rotate_x = 0;
 double rotate_z = 0;
@@ -1626,7 +1637,7 @@ int main(int argc, char *argv[]) {
     glutInitWindowSize(1280, 720);
     glutInitWindowPosition(0, 0);
     // Crear ventana
-    glutCreateWindow("Defiende la puerta");
+    IdMain = glutCreateWindow("Defiende la puerta");
     init();
     // Habilitar la prueba de profundidad de Z-buffer
     glEnable(GL_DEPTH_TEST);
@@ -1670,10 +1681,73 @@ int main(int argc, char *argv[]) {
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKeys);
     //glutTimerFunc(30, update, 0);
+
+    glutIdleFunc(idle);
+    IdSub = glutCreateSubWindow(IdMain, 20, 20, 600 - 10, 600 / 10);
+    glutDisplayFunc(pintarsubventana);
+    glutReshapeFunc(tamanosubventana);
+
     // Pasar el control de eventos a GLUT
     glutMainLoop();
 
     // Regresar al sistema operativo
     return 0;
 
+}
+
+// funciones que crean y manejan la subventana
+// Manejo de la subventana y texto
+void pintarsubventana() {
+    glutSetWindow(IdSub);
+    glClearColor(0.7, 0.7, 0.7, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glColor3f(0.0F, 0.0F, 0.0F);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(0.0F, 0.0F);
+    glVertex2f(0.0F, 0.99F);
+    glVertex2f(0.999F, 0.99F);
+    glVertex2f(0.999F, 0.0F);
+    glEnd();
+
+
+    dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
+                  "Todo el texto que necesiten va aqui", 0.0, 0.70);
+
+    // para un "salto de linea hay que cambiar el valor de Y
+    dibujarCadena(label, new double[3]{0.0F, 0.0F, 0.0F},
+                  "Todo el texto que necesiten va aqui", 0.0, 0.30);
+
+    glutSwapBuffers();
+}
+
+void tamanosubventana(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0F, 1.0F, 0.0F, 1.0F);
+}
+
+void idle(void) {
+
+    glutSetWindow(IdMain);
+    glutPostRedisplay();
+    glutSetWindow(IdSub);
+    glutPostRedisplay();
+}
+
+void dibujarCadena(char *s, double color[3], string texto, double posX, double posY) {
+    // Color del texto
+    glColor3f(color[0], color[1], color[2]);
+
+    // cadena formateada
+    sprintf(label, texto.c_str());
+
+    // posición del texto
+    glRasterPos2f(posX, posY);
+
+    // recorrido letra a letra para dibujar la cadena
+    unsigned int i;
+    for (i = 0; i < strlen(s); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+    }
 }
