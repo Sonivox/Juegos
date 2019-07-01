@@ -9,7 +9,53 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e1ba7640-59e8-4759-90a7-a581a930e306" name="Default Changelist" comment="" />
+    <list default="true" id="e1ba7640-59e8-4759-90a7-a581a930e306" name="Default Changelist" comment="musica al 2">
+      <change afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/cobblestone.bmp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Juego1/cmake-build-debug/suelo.bmp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/3.14.3/CMakeSystem.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdC/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/3.14.3/CompilerIdCXX/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/CXX.includecache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/depend.internal" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/feature_tests.cxx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/Juego1.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego1/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/Juego3.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/cmake-build-debug/Juego3" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/cmake-build-debug/Juego3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Juego3/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Juego3/main.cpp" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +66,7 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -102,6 +148,12 @@
       <workItem from="1561760019046" duration="86000" />
       <workItem from="1561930395365" duration="2501000" />
       <workItem from="1561948738342" duration="236000" />
+      <workItem from="1561959470860" duration="516000" />
+      <workItem from="1561960382784" duration="23000" />
+      <workItem from="1561966887651" duration="34000" />
+      <workItem from="1561966943287" duration="11000" />
+      <workItem from="1561970737870" duration="171000" />
+      <workItem from="1561970924036" duration="195000" />
     </task>
     <task id="LOCAL-00001" summary="Juego 1 casi listo">
       <created>1561500284361</created>
@@ -124,16 +176,23 @@
       <option name="project" value="LOCAL" />
       <updated>1561702449938</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="musica al 2">
+      <created>1561959647467</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1561959647467</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3635000" />
+    <option name="totallyTimeSpent" value="4585000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1368" height="733" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27954546" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3068182" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -144,9 +203,9 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" visible="true" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32840723" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.3289256" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32840723" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -160,7 +219,10 @@
     <MESSAGE value="Juego 1 casi listo" />
     <MESSAGE value="Juego 1 modificaciones, Juego 3 empezado" />
     <MESSAGE value="Juego 3 interactivo (falta poco) y cambios menores al 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Juego 3 interactivo (falta poco) y cambios menores al 1" />
+    <MESSAGE value="Merge remote-tracking branch 'Juegos/master'" />
+    <MESSAGE value="musica al 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="musica al 2" />
+    <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Juego1/main.cpp">

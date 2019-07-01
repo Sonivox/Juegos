@@ -1,3 +1,0 @@
-/home/striker/CLionProjects/Juegos/Juego1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/striker/CLionProjects/Juegos/Juego1/cmake-build-debug/CMakeFiles/Juego1.dir
-/home/striker/CLionProjects/Juegos/Juego1/cmake-build-debug/CMakeFiles/edit_cache.dir
